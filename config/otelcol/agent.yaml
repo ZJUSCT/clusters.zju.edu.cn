@@ -132,6 +132,7 @@ receivers:
         parse_to: attributes["nginx"]
         delimiter: ':'
         pair_delimiter: ','
+        if: 'type(attributes["kv"]) != "nil"'
       - type: remove
         field: attributes["kv"]
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver/otlpreceiver
@@ -244,7 +245,7 @@ receivers:
             enabled: true
       filesystem:
         include_fs_types:
-          fs_types: [btrfs, nfs, ext4, zfs, xfs, nfs4, exfat]
+          fs_types: [btrfs, nfs, ext4, zfs, xfs, nfs4, exfat, apfs]
           match_type: "strict"
 
 processors:

@@ -1,0 +1,31 @@
+<!-- /Library/LaunchDaemons/otelcol-contrib.plist -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>Label</key>
+        <string>otelcol-contrib</string>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Program</key>
+        <string>/usr/local/bin/otelcol-contrib</string>
+        <key>ProgramArguments</key>
+        <array>
+                <string>/usr/local/bin/otelcol-contrib</string>
+                <string>--config=/etc/otelcol-contrib/config.yaml</string>
+        </array>
+        <key>EnvironmentVariables</key>
+        <dict>
+                <key>OTEL_BEARER_TOKEN</key>
+                <string></string>
+                <key>OTEL_CLOUD_REGION</key>
+                <string></string>
+        </dict>
+        <key>StandardOutPath</key>
+        <string>/var/log/otelcol-contrib.log</string>
+        <key>StandardErrorPath</key>
+        <string>/var/log/otelcol-contrib-err.log</string>
+</dict>
+</plist>
