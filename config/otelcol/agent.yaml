@@ -2,7 +2,7 @@
 # curl https://gh-proxy.com/https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/tools/upgrade_agent.sh | sudo bash
 # https://opentelemetry.io/docs/collector/configuration/
 # https://github.com/open-telemetry/opentelemetry-collector/blob/main/examples/local/otel-config.yaml
-# Version: otelcol-contrib v0.115.0
+# Version: otelcol-contrib v0.117.0
 # Environment Variables should be set in systemd service file:
 #
 #   [Service]
@@ -92,7 +92,7 @@ receivers:
       service.name: nginx-error
     operators:
       - type: regex_parser
-        regex: '(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<severity>\w+)\] (?P<pid>\d+)#(?P<tid>\d+): (?:\*(?P<cid>\d+) )?(?P<message>[^,]+?)(?:, (?P<kv>.+))?'
+        regex: '(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<severity>\w+)\] (?P<pid>\d+)#(?P<tid>\d+): (?:\*(?P<cid>\d+) )?(?P<message>[^,]+)(?:, (?P<kv>.+))?'
         timestamp:
           layout: "%Y/%m/%d %H:%M:%S"
           parse_from: attributes["timestamp"]
