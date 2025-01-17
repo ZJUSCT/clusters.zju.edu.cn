@@ -149,7 +149,7 @@ receivers:
   journald:
     # https://www.freedesktop.org/software/systemd/man/249/journald.conf.html
     # In journald.conf, set Storage=volatile
-    directory: /run/log/journal
+    directory: /var/log/journal
     # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/operators/README.md
     # 目前，该 receiver 仅设置 timestamp，其余信息全部堆在 body。
     # 正在等待标准修订，下面的 Issue 需要跟踪。
