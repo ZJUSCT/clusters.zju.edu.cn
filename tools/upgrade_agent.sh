@@ -63,7 +63,7 @@ ubuntu|debian|kali|linuxmint)
 arch|manjaro|openwrt)
 	OTELCOL_URL="$OTELCOL_URL"linux_"$ARCH".tar.gz
 	;;
-fedora|rhel|rocky)
+fedora|rhel|rocky|centos)
 	OTELCOL_URL="$OTELCOL_URL"linux_"$ARCH".rpm
 	;;
 darwin)
@@ -88,7 +88,7 @@ case $ID in
 ubuntu|debian|kali|linuxmint)
 	dpkg -i "$TMPFILE"
 	;;
-fedora|rhel|rocky)
+fedora|rhel|rocky|centos)
 	rpm -i "$TMPFILE"
 	;;
 arch|manjaro|openwrt|darwin)
