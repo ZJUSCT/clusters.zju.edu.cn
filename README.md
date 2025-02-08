@@ -8,7 +8,6 @@
 
 - To be done
     - [ ] InfluxDB Exporter
-    - [ ] Nginx Native Collector
     - [ ] Grafana Provision Alerts
 - Pending
     - [ ] 修复 Prometheus Exporter 描述不一致报错：Wait for [Inconsistent Metric Descriptions Between `dockerstatsreceiver` and `podmanstatsreceiver` Causing `prometheusexporter` Errors · Issue #35829 · open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/35829)
