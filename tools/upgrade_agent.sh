@@ -76,10 +76,10 @@ darwin)
 esac
 
 # check if otelcol-contrib is running
-if pgrep -x "otelcol-contrib" >/dev/null; then
-	echo "Please stop otelcol-contrib first"
-	exit 1
-fi
+# if pgrep -x "otelcol-contrib" >/dev/null; then
+# 	echo "Please stop otelcol-contrib first"
+# 	exit 1
+# fi
 
 # download to tmp and install
 TMPFILE=$(mktemp)
