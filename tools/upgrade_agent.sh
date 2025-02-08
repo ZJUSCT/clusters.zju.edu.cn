@@ -1,6 +1,6 @@
 #!/bin/bash
 # export GHPROXY=https://ghfast.top/
-# curl "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/tools/upgrade_agent.sh | sudo bash
+# curl "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/tools/upgrade_agent.sh | sudo -E bash
 
 set -xe
 
@@ -12,7 +12,7 @@ fi
 
 # https://ghproxy.link/
 # $GHPROXY can be used
-echo $GHPROXY
+echo "using $GHPROXY"
 OTELCOL_VERSION="0.119.0"
 OTELCOL_URL="$GHPROXY"https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v"$OTELCOL_VERSION"/otelcol-contrib_"$OTELCOL_VERSION"_
 
