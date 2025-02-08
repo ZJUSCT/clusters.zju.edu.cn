@@ -1,5 +1,5 @@
 #!/bin/bash
-# curl https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/tools/upgrade_agent.sh | bash
+# curl https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/tools/upgrade_agent.sh | sudo bash
 
 set -xe
 
@@ -98,8 +98,14 @@ rm "$TMPFILE"
 if [ ! -d /etc/otelcol-contrib ]; then
 	mkdir /etc/otelcol-contrib
 fi
-if [ -f /etc/otelcol-contrib/config.yaml ]; then
-	mv /etc/otelcol-contrib/config.yaml /etc/otelcol-contrib/config.yaml.old
-fi
 
-wget https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/otelcol/agent.yaml -O /etc/otelcol-contrib/config.yaml || exit 1
+wget https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/otelcol/agent.yaml -O /etc/otelcol-contrib/config.yaml.latest || exit 1
+
+# diff
+if [ -f /etc/otelcol-contrib/config.yaml ]; then
+	if ! diff -q /etc/otelcol-contrib/config.yaml /etc/otelcol-contrib/config.yaml.latest; then
+		echo "New config file is different from the current one"
+		echo "Please check the diff and merge manually"
+		exit 1
+	fi
+fi
