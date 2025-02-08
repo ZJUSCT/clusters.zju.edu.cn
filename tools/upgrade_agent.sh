@@ -116,3 +116,29 @@ if [ -f /etc/otelcol-contrib/config.yaml ]; then
 		exit 1
 	fi
 fi
+
+# service management
+case $ID in
+darwin)
+	# check /Library/LaunchDaemons/otelcol-contrib.plist
+	if [ ! -f /Library/LaunchDaemons/otelcol-contrib.plist ]; then
+		wget "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/others/launchctl-otelcol.plist -O /Library/LaunchDaemons/otelcol-contrib.plist || exit 1
+		xattr -rd com.apple.quarantine /Library/LaunchDaemons/otelcol-contrib.plist
+		echo "+ LaunchDaemon installed"
+	fi
+	;;
+openwrt)
+	# check /etc/init.d/otelcol-contrib
+	if [ ! -f /etc/init.d/otelcol-contrib ]; then
+		wget "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/others/openwrt-service.sh -O /etc/init.d/otelcol-contrib || exit 1
+		chmod +x /etc/init.d/otelcol-contrib
+		echo "+ OpenWRT service installed"
+	fi
+	;;
+*)
+	# check /etc/systemd/system/otelcol-contrib.service.d/override.conf
+	if [ ! -f /etc/systemd/system/otelcol-contrib.service.d/override.conf ]; then
+		wget "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/others/systemd-override.conf -O /etc/systemd/system/otelcol-contrib.service.d/override.conf || exit 1
+		echo "+ systemd override installed"
+	fi
+esac
