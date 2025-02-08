@@ -116,6 +116,8 @@ if [ -f /etc/otelcol-contrib/config.yaml ]; then
 	else
 		rm /etc/otelcol-contrib/config.yaml.latest
 	fi
+else
+	mv /etc/otelcol-contrib/config.yaml.latest /etc/otelcol-contrib/config.yaml
 fi
 
 # service management
