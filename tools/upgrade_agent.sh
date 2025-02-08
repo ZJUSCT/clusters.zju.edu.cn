@@ -113,7 +113,8 @@ if [ -f /etc/otelcol-contrib/config.yaml ]; then
 	if ! diff -q /etc/otelcol-contrib/config.yaml /etc/otelcol-contrib/config.yaml.latest; then
 		echo "New config file is different from the current one"
 		echo "Please check the diff and merge manually"
-		exit 1
+	else
+		rm /etc/otelcol-contrib/config.yaml.latest
 	fi
 fi
 
