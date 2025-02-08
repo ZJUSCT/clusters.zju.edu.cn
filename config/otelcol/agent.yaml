@@ -24,13 +24,16 @@ receivers:
   # Containers #
   ##############
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/dockerstatsreceiver
+  # requires unix:///var/run/docker.sock
   docker_stats:
     metrics:
       container.uptime:
         enabled: true
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md
   filelog/docker:
-    include: /var/lib/docker/containers/*/*-json.log
+    include:
+      - /var/lib/docker/containers/*/*-json.log
+      - /opt/docker/containers/*/*-json.log # openWRT
     operators:
       - type: container
         format: docker
