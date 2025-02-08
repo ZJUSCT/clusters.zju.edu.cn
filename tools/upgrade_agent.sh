@@ -9,8 +9,10 @@ if [ "$(id -u)" -ne 0 ]; then
 	exit 1
 fi
 
+# https://ghproxy.link/
+# $GHPROXY can be used
 OTELCOL_VERSION="0.119.0"
-OTELCOL_URL=https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v"$OTELCOL_VERSION"/otelcol-contrib_"$OTELCOL_VERSION"_
+OTELCOL_URL="$GHPROXY"https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v"$OTELCOL_VERSION"/otelcol-contrib_"$OTELCOL_VERSION"_
 
 # check otelcol-contrib version
 if command -v otelcol-contrib >/dev/null; then
