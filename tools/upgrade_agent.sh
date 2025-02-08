@@ -91,9 +91,12 @@ ubuntu|debian|kali|linuxmint)
 fedora|rhel|rocky|centos)
 	rpm -i "$TMPFILE"
 	;;
-arch|manjaro|openwrt|darwin)
+arch|manjaro|darwin)
 	# extract only otelcol-contrib
 	tar -xzf "$TMPFILE" -C /usr/local/bin otelcol-contrib
+	;;
+openwrt)
+	tar -xzf "$TMPFILE" -C /usr/bin otelcol-contrib
 	;;
 esac
 rm "$TMPFILE"
