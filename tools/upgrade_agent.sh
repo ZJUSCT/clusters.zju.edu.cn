@@ -101,7 +101,7 @@ if [ ! -d /etc/otelcol-contrib ]; then
 	mkdir /etc/otelcol-contrib
 fi
 
-wget https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/otelcol/agent.yaml -O /etc/otelcol-contrib/config.yaml.latest || exit 1
+wget "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/otelcol/agent.yaml -O /etc/otelcol-contrib/config.yaml.latest || exit 1
 
 # diff
 if [ -f /etc/otelcol-contrib/config.yaml ]; then
