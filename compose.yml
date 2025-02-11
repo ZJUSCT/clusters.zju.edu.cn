@@ -18,12 +18,10 @@ services:
       - 127.0.0.1:55679:55679   # zpages
     # receiver ports
       - 514:514/udp   # syslog receiver
-    #  - 4317:4317     # OTLP gRPC receiver, only for internal use
       - 4319:4318     # OTLP http receiver, conflict with host otel-collector
     restart: unless-stopped
-    # cannot use any command in this image...
     # healthcheck:
-    # if clickhouse is not ready, otel-collector will shutdown: cannot start pipelines
+    # cannot use any command in this image...
     depends_on:
       clickhouse:
         condition: service_healthy
@@ -60,11 +58,13 @@ services:
     ports:
       - 127.0.0.1:8123:8123 # HTTP interface
       - 127.0.0.1:9000:9000 # Native Client
+    # clickhouse now requires password to be set for default user
+    # otherwise, network access will be restricted to localhost for default user
     environment:
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
-    # https://github.com/plausible/analytics/discussions/4629#discussioncomment-10774222
-    cap_add:
-      - CAP_SYS_NICE
+    # # https://github.com/plausible/analytics/discussions/4629#discussioncomment-10774222
+    # cap_add:
+    #   - CAP_SYS_NICE
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "clickhouse-client", "--query", "SHOW DATABASES"]
@@ -86,6 +86,7 @@ services:
     command: [
       "--config.file=/etc/prometheus/prometheus.yml",
       "--storage.tsdb.path=/prometheus",
+      # we added the following options
       "--storage.tsdb.retention.time=180d",
       "--web.enable-remote-write-receiver",
       "--web.enable-admin-api"
