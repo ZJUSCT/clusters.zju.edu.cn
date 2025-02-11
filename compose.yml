@@ -55,6 +55,7 @@ services:
     image: clickhouse/clickhouse-server
     volumes:
       - clickhouse:/var/lib/clickhouse
+      - ./config/clickhouse.xml:/etc/clickhouse-server/users.d/default-user.xml
     # only for localhost
     ports:
       - 127.0.0.1:8123:8123 # HTTP interface

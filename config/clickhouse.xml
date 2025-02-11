@@ -1,0 +1,13 @@
+<!-- /etc/clickhouse-server/users.d/default-user.xml -->
+<clickhouse>
+  <!-- Docs: <https://clickhouse.com/docs/en/operations/settings/settings_users/> -->
+  <users>
+    <default>
+      <!-- User default is available NOT only locally -->
+      <networks>
+        <ip>::0</ip>
+        <ip>0.0.0.0</ip>
+      </networks>
+    </default>
+  </users>
+</clickhouse>
