@@ -153,6 +153,7 @@ services:
       - GF_TG_BOT_TOKEN=${GF_TG_BOT_TOKEN}
       - GF_TG_CHAT_ID=${GF_TG_CHAT_ID}
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
       # - http_proxy=http://bridge.internal.zjusct.io:7890
       # - https_proxy=http://bridge.internal.zjusct.io:7890
       # https://unix.stackexchange.com/questions/23452/set-a-network-range-in-the-no-proxy-environment-variable
