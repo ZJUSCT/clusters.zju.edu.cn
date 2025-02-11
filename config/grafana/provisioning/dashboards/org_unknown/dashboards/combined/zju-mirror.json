@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 9,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -1471,6 +1471,6 @@
   "timezone": "browser",
   "title": "ZJU Mirror",
   "uid": "be0q417oay0aoe",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }

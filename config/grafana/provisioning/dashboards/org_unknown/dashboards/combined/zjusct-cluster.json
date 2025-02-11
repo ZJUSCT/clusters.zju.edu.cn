@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -1306,6 +1306,6 @@
   "timezone": "browser",
   "title": "ZJUSCT Cluster",
   "uid": "ce0qhdyuzrojkf",
-  "version": 23,
+  "version": 1,
   "weekStart": ""
 }

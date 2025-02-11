@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 9,
   "links": [],
   "panels": [
     {
@@ -1564,6 +1564,6 @@
   "timezone": "browser",
   "title": "SNMP PDU Metrics",
   "uid": "fe11nlbe4vz7ka",
-  "version": 74,
+  "version": 1,
   "weekStart": ""
 }
