@@ -12,6 +12,7 @@ credential_names=(
 	"INFLUXDB_TOKEN"
 	"SNMP_PRIVATE_KEY"
 	"SNMP_AUTH_KEY"
+	"CLICKHOUSE_PASSWORD"
 )
 
 . tools/common-function.sh

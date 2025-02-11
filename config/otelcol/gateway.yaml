@@ -101,6 +101,7 @@ exporters:
   clickhouse:
     endpoint: clickhouse://clickhouse:9000
     ttl: 4320h
+    password: ${CLICKHOUSE_PASSWORD}
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/prometheusexporter
   #  prometheus:
   #    endpoint: otelcol:9090

@@ -10,6 +10,7 @@ services:
     # https://opentelemetry.io/docs/collector/configuration/#environment-variables
     environment:
       - OTEL_BEARER_TOKEN=${OTEL_BEARER_TOKEN}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     ports:
     # extension ports
       - 127.0.0.1:13133:13133   # health_check extension
@@ -55,11 +56,12 @@ services:
     image: clickhouse/clickhouse-server
     volumes:
       - clickhouse:/var/lib/clickhouse
-      - ./config/clickhouse.xml:/etc/clickhouse-server/users.d/default-user.xml
     # only for localhost
     ports:
       - 127.0.0.1:8123:8123 # HTTP interface
       - 127.0.0.1:9000:9000 # Native Client
+    environment:
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     # https://github.com/plausible/analytics/discussions/4629#discussioncomment-10774222
     cap_add:
       - CAP_SYS_NICE
