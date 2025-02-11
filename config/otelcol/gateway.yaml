@@ -46,7 +46,16 @@ receivers:
     protocol: rfc3164
     # we configure all infrastructure to use the same timezone UTC +8
     location: Asia/Shanghai
-    #operators:
+    operators:
+      # syslog receiver still contains some deprecated semantics conventions, should be fixed in the future
+      # move "hostname" to resource["host.name"]
+      - type: move
+        from: attributes["hostname"]
+        to: resource["host.name"]
+      # move attributes["message"] to body
+      - type: move
+        from: attributes["message"]
+        to: body
     #  - type: router
     #    routes:
     #      - output: huawei_add_resource
@@ -55,7 +64,7 @@ receivers:
     #    default: noop
     #  - id: huawei_add_resource
     #    type: add
-    #    field: resource.device.manufacturer
+    #    field: resource["device.manufacturer"]
     #    value: Huawei
     #    output: huawei_regex_parser
     #  - id: huawei_regex_parser
