@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 6,
+  "id": 7,
   "links": [],
   "panels": [
     {
@@ -1690,7 +1690,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(system_memory_usage_bytes{cloud_region=\"$cloud_region\", host_name=\"$host_name\", state=\"used\"}) + sum(system_memory_usage_bytes{cloud_region=\"$cloud_region\", host_name=\"$host_name\", state=\"free\"}) + sum(system_memory_usage_bytes{cloud_region=\"$cloud_region\", host_name=\"$host_name\", state=\"cached\"})",
+          "expr": "sum(system_memory_usage_bytes{cloud_region=\"$cloud_region\", host_name=\"$host_name\", state=~\"used|free|cached|inactive\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": true,
@@ -2917,8 +2917,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3250,6 +3249,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Host Metrics Receiver",
   "uid": "de100g4yd5xxcc",
-  "version": 12,
+  "version": 3,
   "weekStart": ""
 }
