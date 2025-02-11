@@ -32,7 +32,7 @@ for credential_name in "${credential_names[@]}"; do
 		echo "Failed to get $credential_name"
 		continue
 	fi
-	echo "$credential_name=\"$password\"" >>../.env
+	echo "$credential_name=\"$password\"" >>.env
 done
 
 bw logout
