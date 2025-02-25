@@ -21,5 +21,3 @@ datasources:
         defaultTable: otel_traces
         otelEnabled: true
         otelVersion: latest
-    secureJsonData:
-      password: ${CLICKHOUSE_PASSWORD}

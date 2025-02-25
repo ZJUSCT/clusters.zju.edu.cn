@@ -10,7 +10,6 @@ services:
     # https://opentelemetry.io/docs/collector/configuration/#environment-variables
     environment:
       - OTEL_BEARER_TOKEN=${OTEL_BEARER_TOKEN}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
     ports:
     # extension ports
       - 127.0.0.1:13133:13133   # health_check extension
@@ -61,7 +60,9 @@ services:
     # clickhouse now requires password to be set for default user
     # otherwise, network access will be restricted to localhost for default user
     environment:
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - CLICKHOUSE_SKIP_USER_SETUP=1
+      - https_proxy=http://172.25.2.253:7890
+      - http_proxy=http://172.25.2.253:7890
     # # https://github.com/plausible/analytics/discussions/4629#discussioncomment-10774222
     # cap_add:
     #   - CAP_SYS_NICE
@@ -153,7 +154,6 @@ services:
       - GF_TG_BOT_TOKEN=${GF_TG_BOT_TOKEN}
       - GF_TG_CHAT_ID=${GF_TG_CHAT_ID}
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
-      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
       # - http_proxy=http://bridge.internal.zjusct.io:7890
       # - https_proxy=http://bridge.internal.zjusct.io:7890
       # https://unix.stackexchange.com/questions/23452/set-a-network-range-in-the-no-proxy-environment-variable
