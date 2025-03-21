@@ -10,9 +10,8 @@ if ! command -v gdg &>/dev/null; then
 	exit
 fi
 
-# # anonymous access enabled, no need to login
-# source ../.env
-# export GDG_CONTEXTS__ZJUSCT__PASSWORD=$GF_SECURITY_ADMIN_PASSWORD
+source .env
+export GDG_CONTEXTS__ZJUSCT__PASSWORD=$GF_SECURITY_ADMIN_PASSWORD
 
 # test grafana up
 if ! curl -f https://grafana.clusters.zjusct.io/api/health; then

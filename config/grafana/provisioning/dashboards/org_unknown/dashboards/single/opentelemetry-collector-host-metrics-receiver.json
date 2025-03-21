@@ -3249,6 +3249,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Host Metrics Receiver",
   "uid": "de100g4yd5xxcc",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }

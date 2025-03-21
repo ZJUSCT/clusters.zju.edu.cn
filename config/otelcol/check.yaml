@@ -1,0 +1,72 @@
+# standalone various check collector
+
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver
+# OpenTelemetry Checkers:
+# - sshcheck
+# - tcpcheck
+# - tlscheck
+# - httpcheck
+
+receivers:
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/tcpcheckreceiver
+  # tcpcheck/vlan2:
+  #   targets:
+  #     - endpoint: 172.25.2.23:22
+  #     - endpoint: 172.25.2.24:22
+  #     - endpoint: 172.25.2.100:22
+  #     - endpoint: 172.25.2.101:22
+  #     - endpoint: 172.25.2.120:22
+  #     - endpoint: 172.25.2.121:22
+  #     - endpoint: 172.25.2.130:22
+  #     - endpoint: 172.25.2.131:22
+  #     - endpoint: 172.25.2.132:22
+  #     - endpoint: 172.25.2.133:22
+  #     - endpoint: 172.25.2.134:22
+  #     - endpoint: 172.25.2.135:22
+  #     - endpoint: 172.25.2.136:22
+  # tcpcheck/vlan3:
+  #   targets:
+  #     - endpoint: 172.25.3.253:22
+  #     - endpoint: 172.25.3.254:22
+  # tcpcheck/vlan4:
+  #   targets:
+  #     - endpoint: 172.25.4.40:22
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/tlscheckreceiver
+  tlscheck:
+    targets:
+      - endpoint: git.zju.edu.cn:443
+      - endpoint: mirror.zju.edu.cn:443
+      - endpoint: mirrors.zju.edu.cn:443
+      - endpoint: clusters.zju.edu.cn:443
+      - endpoint: www.clusters.zjusct.io:443
+
+processors:
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
+  batch:
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/memorylimiterprocessor
+  memory_limiter:
+    # 75% of maximum memory up to 2G
+    limit_mib: 1536
+    # 25% of limit up to 2G
+    spike_limit_mib: 512
+    check_interval: 5s
+  resource/cloud:
+    attributes:
+      - key: cloud.region
+        value: "zjusct-cluster"
+        action: insert
+
+exporters:
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
+  # grpc only
+  otlp/internal:
+    endpoint: otelcol-gateway:4317
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    metrics:
+      receivers: [tlscheck]
+      processors: [memory_limiter, batch, resource/cloud]
+      exporters: [otlp/internal]

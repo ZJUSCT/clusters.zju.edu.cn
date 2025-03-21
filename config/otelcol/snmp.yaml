@@ -2939,13 +2939,6 @@ processors:
             experimental_scale: 0.1
 
 exporters:
-  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/debugexporter
-  debug/basic:
-    verbosity: basic
-  debug/normal:
-    verbosity: normal
-  debug/detailed:
-    verbosity: detailed
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
   # grpc only
   otlp/internal:

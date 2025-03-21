@@ -25,15 +25,15 @@ services:
       clickhouse:
         condition: service_healthy
         restart: true
-      elasticsearch:
-        condition: service_healthy
-        restart: true
+      # elasticsearch:
+      #   condition: service_healthy
+      #   restart: true
       prometheus:
         condition: service_healthy
         restart: true
-      influxdb:
-        condition: service_healthy
-        restart: true
+      # influxdb:
+      #   condition: service_healthy
+      #   restart: true
 
   otelcol-snmp:
     image: otel/opentelemetry-collector-contrib
@@ -42,6 +42,16 @@ services:
     environment:
       - SNMP_PRIVATE_KEY=${SNMP_PRIVATE_KEY}
       - SNMP_AUTH_KEY=${SNMP_AUTH_KEY}
+    restart: unless-stopped
+    depends_on:
+      otelcol-gateway:
+        condition: service_started
+        restart: true
+
+  otelcol-check:
+    image: otel/opentelemetry-collector-contrib
+    volumes:
+      - ./config/otelcol/check.yaml:/etc/otelcol-contrib/config.yaml:ro
     restart: unless-stopped
     depends_on:
       otelcol-gateway:
@@ -122,24 +132,24 @@ services:
       retries: 3
 
 # https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docker.html
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    volumes:
-      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - elasticsearch:/usr/share/elasticsearch/data
-    # only for localhost
-    ports:
-      - 127.0.0.1:9200:9200
-    restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl http://elasticsearch:9200",
-        ]
-      interval: 10s
-      timeout: 10s
-      retries: 120
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+#    volumes:
+#      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+#      - elasticsearch:/usr/share/elasticsearch/data
+#    # only for localhost
+#    ports:
+#      - 127.0.0.1:9200:9200
+#    restart: unless-stopped
+#    healthcheck:
+#      test:
+#        [
+#          "CMD-SHELL",
+#          "curl http://elasticsearch:9200",
+#        ]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 120
 
 # https://hub.docker.com/r/grafana/grafana-enterprise/
   grafana:
@@ -186,12 +196,12 @@ volumes:
       type: none
       device: ./database/prometheus
       o: bind
-  elasticsearch:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./database/elasticsearch
-      o: bind
+  # elasticsearch:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: ./database/elasticsearch
+  #     o: bind
   influxdb:
     driver: local
     driver_opts:

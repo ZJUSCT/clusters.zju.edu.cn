@@ -1,0 +1,164 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations \u0026 Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 10,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "panels": [],
+      "title": "TCP Checker",
+      "type": "row"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "panels": [],
+      "title": "TLS Checker",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 1,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "tlscheck_time_left_seconds {__name__=\"tlscheck_time_left_seconds\", cloud_region=\"zjusct-cluster\", host_arch=\"amd64\", host_cpu_model_name=\"AMD EPYC 9654 96-Core Processor\", host_id=\"6914ba4a3f44bff176b0e09e67d9751a\", host_ip=\"[\"172.25.4.80\",\"fe80::9ec2:c4ff:fe55:e33e\",\"172.18.0.1\",\"172.19.0.1\",\"fe80::ec39:69ff:feca:b754\",\"172.17.0.1\",\"fe80::a4a9:25ff:febd:40c4\"]\", host_name=\"A700\", os_description=\"Debian GNU/Linux 12 (bookworm) (Linux A700 6.1.0-32-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.129-1 (2025-03-06) x86_64)\", os_type=\"linux\", tlscheck_endpoint=\"clusters.zju.edu.cn:443\", tlscheck_x509_cn=\"clusters.zju.edu.cn\", tlscheck_x509_issuer=\"CN=E6,O=Let's Encrypt,C=US\"}"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "tlscheck_time_left_seconds{}",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{tlscheck_endpoint}},{{tlscheck_x509_cn}},{{tlscheck_x509_issuer}}",
+          "range": true,
+          "refId": "Time Left"
+        }
+      ],
+      "title": "ZJUSCT Managed",
+      "transformations": [
+        {
+          "id": "timeSeriesTable",
+          "options": {}
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "tlscheck_endpoint",
+                "tlscheck_x509_cn",
+                "tlscheck_x509_issuer",
+                "Trend #Time Left"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "OpenTelemetry Collector Checker",
+  "uid": "begi9tseo7jswb",
+  "version": 6,
+  "weekStart": ""
+}

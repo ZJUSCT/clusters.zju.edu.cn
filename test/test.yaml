@@ -1,74 +1,42 @@
 # https://opentelemetry.io/docs/collector/configuration/
 # https://github.com/open-telemetry/opentelemetry-collector/blob/main/examples/local/otel-config.yaml
 
-extensions:
-  health_check:
-  pprof:
-    endpoint: "localhost:1778"
-  zpages:
-    endpoint: "localhost:55680"
-
+# configuration for local test
 receivers:
-  journald:
-    # https://www.freedesktop.org/software/systemd/man/249/journald.conf.html
-    # In journald.conf, set Storage=volatile
-    directory: /run/log/journal
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/operators/README.md
-    # 目前，该 receiver 仅设置 timestamp，其余信息全部堆在 body。
-    # 正在等待标准修订，下面的 Issue 需要跟踪。
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/7298
-    operators:
-      # 特殊情况：
-      # - kernel 和某些 log 没有 PID、COMM、EXE、CMDLINE、UID、GID 等字段
-      # https://www.freedesktop.org/software/systemd/man/latest/systemd.journal-fields.html
-      # 全部移动到 attributes.journald，然后将语义明确的移动到 resource 和 attributes
-      - type: move
-        from: body
-        to: attributes.journald
-      - type: move
-        from: attributes.journald["MESSAGE"]
-        to: body
-      - type: move
-        from: attributes.journald["_PID"]
-        to: resource["process.pid"]
-        if: 'type(attributes.journald["_PID"]) != "nil"'
-      - type: move
-        from: attributes.journald["_COMM"]
-        to: resource["process.executable.name"]
-        if: 'type(attributes.journald["_COMM"]) != "nil"'
-      - type: move
-        from: attributes.journald["_EXE"]
-        to: resource["process.executable.path"]
-        if: 'type(attributes.journald["_EXE"]) != "nil"'
-      - type: move
-        from: attributes.journald["_CMDLINE"]
-        to: resource["process.command_line"]
-        if: 'type(attributes.journald["_CMDLINE"]) != "nil"'
-      - type: move
-        from: attributes.journald["_UID"]
-        to: resource["process.owner"]
-        if: 'type(attributes.journald["_UID"]) != "nil"'
-      # 下面的字段所有情况都有
-      - type: move
-        from: attributes.journald["SYSLOG_IDENTIFIER"]
-        to: resource["service.name"]
-        if: 'type(attributes.journald["SYSLOG_IDENTIFIER"]) != "nil"'
-      - type: move
-        from: attributes.journald["_HOSTNAME"]
-        to: resource["host.name"]
-      - type: severity_parser
-        parse_from: attributes.journald["PRIORITY"]
-        preset: none
-        mapping:
-          # OTel severity number: systemd priority # syslog severity
-          fatal: 0 # emerg
-          error3: 1 # alert
-          error2: 2 # crit
-          error: 3
-          warn: 4
-          info2: 5 # notice
-          info: 6
-          debug: 7
+  tcpcheck:
+    # target:
+    # endpoint: 172.25.2.23:22
+    # collection_interval: 60s
+      # - 172.25.2.23:22
+      # - 172.25.2.24:22
+      # - 172.25.2.100:22
+      # - 172.25.2.101:22
+      # - 172.25.2.120:22
+      # - 172.25.2.121:22
+      # - 172.25.2.130:22
+      # - 172.25.2.131:22
+      # - 172.25.2.132:22
+      # - 172.25.2.133:22
+      # - 172.25.2.134:22
+      # - 172.25.2.135:22
+      # - 172.25.2.136:22
+      # - 172.25.3.23:443
+
+exporters:
+  # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlphttpexporter/README.md
+  otlphttp:
+    endpoint: http://localhost:4318
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
+  otlp:
+    endpoint: localhost:4317
+    tls:
+      insecure: true
+  debug/detailed:
+    verbosity: detailed
+  debug/basic:
+    verbosity: basic
+  file:
+    path: /tmp/otel-output.json
 
 processors:
   batch:
@@ -88,46 +56,13 @@ processors:
   #    value: "testbench"
   #    action: upsert
 
-exporters:
-  debug/detailed:
-    verbosity: detailed
-  debug/basic:
-    verbosity: basic
-  file:
-    path: /tmp/otel-output.json
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/prometheusremotewriteexporter
-  prometheusremotewrite:
-    endpoint: "http://localhost:9090/api/v1/write"
-    # wal cause error, do not use
-    # wal:
-    resource_to_telemetry_conversion:
-      enabled: true
-    retry_on_failure:
-      enabled: true
-      initial_interval: 10s
-      max_interval: 60s
-      max_elapsed_time: 10m
-    # to be same with prometheus exporter
-    add_metric_suffixes: true
-
 service:
   pipelines:
-    logs:
-      receivers: [journald]
-      processors: [memory_limiter, batch, transform/journald]
-      exporters: [debug/basic, file]
-    #traces:
-    #  receivers: [otlp]
-    #  processors: [memory_limiter, batch, resource]
-    #  exporters: [debug]
-    #metrics:
-    #  receivers: [hostmetrics]
-    #  processors: [memory_limiter, batch]
-    #  exporters: [prometheusremotewrite]
-  #telemetry:
-  #  logs:
-  #    level: DEBUG
-  #    development: true
-  #    output_paths: ["stdout"]
-  #    #sampling:
-  #    #  enabled: false
+    metrics:
+      receivers: [tlscheck]
+      exporters: [otlp]
+  # https://github.com/open-telemetry/opentelemetry-collector/discussions/6941
+  # 8888 is enabled by default, so change a port to avoid conflict with native collector
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8889

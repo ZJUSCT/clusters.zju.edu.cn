@@ -122,8 +122,8 @@ exporters:
     # to be same with prometheus exporter
     add_metric_suffixes: true
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/elasticsearchexporter
-  elasticsearch:
-    endpoint: http://elasticsearch:9200
+  # elasticsearch:
+  #   endpoint: http://elasticsearch:9200
 # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/fileexporter
 #file:
 #  path: /test/otel-collector.json
