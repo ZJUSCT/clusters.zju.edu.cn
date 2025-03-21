@@ -121,14 +121,6 @@ exporters:
       max_elapsed_time: 10m
     # to be same with prometheus exporter
     add_metric_suffixes: true
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/elasticsearchexporter
-  # elasticsearch:
-  #   endpoint: http://elasticsearch:9200
-# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/fileexporter
-#file:
-#  path: /test/otel-collector.json
-# https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/nopexporter
-#nop:
 
 service:
   extensions: [health_check, pprof, zpages, bearertokenauth]
@@ -136,11 +128,11 @@ service:
     logs:
       receivers: [otlp/with_auth, otlp/internal]
       processors: [memory_limiter, batch, resource/cloud]
-      exporters: [clickhouse, elasticsearch]
+      exporters: [clickhouse]
     traces:
       receivers: [otlp/with_auth, otlp/internal]
       processors: [memory_limiter, batch, resource/cloud]
-      exporters: [clickhouse, elasticsearch]
+      exporters: [clickhouse]
     metrics:
       receivers: [otlp/with_auth, otlp/internal]
       processors: [memory_limiter, batch, resource/cloud]
@@ -148,4 +140,4 @@ service:
     logs/syslog:
       receivers: [syslog]
       processors: [memory_limiter, batch, resource/cloud]
-      exporters: [clickhouse, elasticsearch]
+      exporters: [clickhouse]

@@ -23,7 +23,7 @@ We ❤️ Open Source
 | 层次 | 组件 |
 | --- | --- |
 | 数据采集 | [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector) |
-| 数据存储 | [ClickHouse](https://github.com/ClickHouse/ClickHouse)、[Elasticsearch](https://github.com/elastic/elasticsearch)、[InfluxDB](https://github.com/influxdata/influxdb)、[Prometheus](https://github.com/prometheus/prometheus) |
+| 数据存储 | [ClickHouse](https://github.com/ClickHouse/ClickHouse)、[InfluxDB](https://github.com/influxdata/influxdb)、[Prometheus](https://github.com/prometheus/prometheus) |
 | 数据分析、可视化和告警 | [Grafana](https://github.com/grafana/grafana) |
 
 系统整体设计遵循 KISS（Keep It Simple, Stupid）原则，简化层次间交互的复杂度，降低系统维护的难度。

@@ -15,5 +15,3 @@ services:
     ports:
       - 8888:8888 # internal metrics
 #    command: otelcol-contrib --config /etc/otelcol-contrib/config.yaml
-
-    

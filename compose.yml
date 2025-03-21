@@ -25,9 +25,6 @@ services:
       clickhouse:
         condition: service_healthy
         restart: true
-      # elasticsearch:
-      #   condition: service_healthy
-      #   restart: true
       prometheus:
         condition: service_healthy
         restart: true
@@ -131,26 +128,6 @@ services:
       timeout: 3s
       retries: 3
 
-# https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docker.html
-#  elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-#    volumes:
-#      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-#      - elasticsearch:/usr/share/elasticsearch/data
-#    # only for localhost
-#    ports:
-#      - 127.0.0.1:9200:9200
-#    restart: unless-stopped
-#    healthcheck:
-#      test:
-#        [
-#          "CMD-SHELL",
-#          "curl http://elasticsearch:9200",
-#        ]
-#      interval: 10s
-#      timeout: 10s
-#      retries: 120
-
 # https://hub.docker.com/r/grafana/grafana-enterprise/
   grafana:
     image: grafana/grafana-enterprise
@@ -167,7 +144,7 @@ services:
       # - http_proxy=http://bridge.internal.zjusct.io:7890
       # - https_proxy=http://bridge.internal.zjusct.io:7890
       # https://unix.stackexchange.com/questions/23452/set-a-network-range-in-the-no-proxy-environment-variable
-      # - no_proxy=127.0.0.1,.cn,.zjusct.io,grafana,prometheus,clickhouse,otelcol,elasticsearch,influxdb
+      # - no_proxy=127.0.0.1,.cn,.zjusct.io,grafana,prometheus,clickhouse,otelcolh,influxdb
     ports:
       - 3000:3000
     restart: unless-stopped
@@ -196,12 +173,6 @@ volumes:
       type: none
       device: ./database/prometheus
       o: bind
-  # elasticsearch:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: ./database/elasticsearch
-  #     o: bind
   influxdb:
     driver: local
     driver_opts:
