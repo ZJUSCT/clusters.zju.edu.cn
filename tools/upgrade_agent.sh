@@ -13,7 +13,8 @@ fi
 # https://ghproxy.link/
 # $GHPROXY can be used
 echo "using $GHPROXY"
-OTELCOL_VERSION="0.119.0"
+# https://github.com/open-telemetry/opentelemetry-collector-releases/releases
+OTELCOL_VERSION="0.122.1"
 OTELCOL_URL="$GHPROXY"https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v"$OTELCOL_VERSION"/otelcol-contrib_"$OTELCOL_VERSION"_
 
 # check otelcol-contrib version
