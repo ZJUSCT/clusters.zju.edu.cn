@@ -142,6 +142,7 @@ openwrt)
 *)
 	# check /etc/systemd/system/otelcol-contrib.service.d/override.conf
 	if [ ! -f /etc/systemd/system/otelcol-contrib.service.d/override.conf ]; then
+		mkdir -p /etc/systemd/system/otelcol-contrib.service.d
 		wget "$GHPROXY"https://raw.githubusercontent.com/ZJUSCT/clusters.zju.edu.cn/refs/heads/main/config/others/systemd-override.conf -O /etc/systemd/system/otelcol-contrib.service.d/override.conf || exit 1
 		echo "+ systemd override installed"
 	fi
