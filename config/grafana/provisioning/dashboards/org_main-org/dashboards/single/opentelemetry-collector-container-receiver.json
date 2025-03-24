@@ -1,0 +1,1474 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations \u0026 Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "dockerstatsreceiver\nfilelogreceiver",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              },
+              {
+                "color": "blue",
+                "value": 11
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 2,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "count(sum by(container_name) (container_uptime_seconds{host_name=\"$host_name\", cloud_region=\"$cloud_region\"}))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": true,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": false,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Running",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "yellow",
+                "value": 3600
+              },
+              {
+                "color": "green",
+                "value": 43200
+              },
+              {
+                "color": "blue",
+                "value": 86400
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 2,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sort_desc(sum by(container_name) (container_uptime_seconds{host_name=\"$host_name\", cloud_region=\"$cloud_region\"}))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": true,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": false,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Uptime",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (container_cpu_utilization_ratio{host_name=\"$host_name\", cloud_region=\"$cloud_region\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "CPU Utilization",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (container_memory_file_bytes{host_name=\"$host_name\", cloud_region=\"$cloud_region\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Memory",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 6
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (rate(container_blockio_io_service_bytes_recursive_total{host_name=\"$host_name\", cloud_region=\"$cloud_region\", operation=\"read\"}[$__rate_interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}-read",
+          "range": true,
+          "refId": "read",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (rate(container_blockio_io_service_bytes_recursive_total{host_name=\"$host_name\", cloud_region=\"$cloud_region\", operation=\"write\"}[$__rate_interval])) * -1",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}-write",
+          "range": true,
+          "refId": "write",
+          "useBackend": false
+        }
+      ],
+      "title": "Block I/O",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Memory Bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "auto"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Block Write"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Block Read"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "CPU"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (container_uptime_seconds{host_name=\"$host_name\", cloud_region=\"$cloud_region\"})",
+          "format": "heatmap",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": true,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": false,
+          "refId": "Uptime",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (container_cpu_utilization_ratio{host_name=\"$host_name\", cloud_region=\"$cloud_region\"})",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "CPU",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (container_memory_percent_ratio{host_name=\"$host_name\", cloud_region=\"$cloud_region\"})",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "Memory Percent",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (container_memory_file_bytes{host_name=\"$host_name\", cloud_region=\"$cloud_region\"})",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "Memory Bytes",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (rate(container_blockio_io_service_bytes_recursive_total{host_name=\"$host_name\", cloud_region=\"$cloud_region\", operation=\"write\"}[$__rate_interval]))",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "Block Write",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "sum by(container_name) (rate(container_blockio_io_service_bytes_recursive_total{host_name=\"$host_name\", cloud_region=\"$cloud_region\", operation=\"read\"}[$__rate_interval]))",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "key": "Q-fd834d0b-78b2-4c06-8d9c-ae5357d21b3a-0",
+          "legendFormat": "{{container_name}}",
+          "range": true,
+          "refId": "Block Read",
+          "useBackend": false
+        }
+      ],
+      "title": "Resource Table",
+      "transformations": [
+        {
+          "id": "timeSeriesTable",
+          "options": {}
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "container_name",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "Trend #(.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "clickhouse"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.9,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "error"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "fatal"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "warn"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "info"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "debug"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "trace"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "unknown"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#787878",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "columns": [
+              {
+                "hint": "trace_id",
+                "name": "TraceId"
+              },
+              {
+                "hint": "time",
+                "name": "Timestamp"
+              },
+              {
+                "hint": "log_level",
+                "name": "SeverityText"
+              },
+              {
+                "hint": "log_message",
+                "name": "Body"
+              },
+              {
+                "hint": "log_labels",
+                "name": "LogAttributes"
+              }
+            ],
+            "database": "default",
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "hint": "time",
+                "key": "",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "type": "datetime"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "hint": "log_level",
+                "key": "",
+                "operator": "IS ANYTHING",
+                "type": "string"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "ResourceAttributes",
+                "label": "ResourceAttributes",
+                "mapKey": "host.name",
+                "operator": "=",
+                "type": "Map(LowCardinality(String), String)",
+                "value": "'$host_name'"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "ResourceAttributes",
+                "label": "ResourceAttributes",
+                "mapKey": "cloud.region",
+                "operator": "=",
+                "type": "Map(LowCardinality(String), String)",
+                "value": "'$cloud_region'"
+              }
+            ],
+            "limit": 1000,
+            "meta": {
+              "logMessageLike": "",
+              "otelEnabled": true,
+              "otelVersion": "latest"
+            },
+            "mode": "list",
+            "orderBy": [
+              {
+                "default": true,
+                "dir": "DESC",
+                "hint": "time",
+                "name": ""
+              }
+            ],
+            "queryType": "logs",
+            "table": "otel_logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "clickhouse"
+          },
+          "editorType": "sql",
+          "format": 2,
+          "meta": {
+            "builderOptions": {
+              "columns": [
+                {
+                  "hint": "trace_id",
+                  "name": "TraceId"
+                },
+                {
+                  "hint": "time",
+                  "name": "Timestamp"
+                },
+                {
+                  "hint": "log_level",
+                  "name": "SeverityText"
+                },
+                {
+                  "hint": "log_message",
+                  "name": "Body"
+                },
+                {
+                  "hint": "log_labels",
+                  "name": "LogAttributes"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "log_level",
+                  "key": "",
+                  "operator": "IS ANYTHING",
+                  "type": "string"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "ResourceAttributes",
+                  "label": "ResourceAttributes",
+                  "mapKey": "host.name",
+                  "operator": "=",
+                  "type": "Map(LowCardinality(String), String)",
+                  "value": "'$host_name'"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "ResourceAttributes",
+                  "label": "ResourceAttributes",
+                  "mapKey": "cloud.region",
+                  "operator": "=",
+                  "type": "Map(LowCardinality(String), String)",
+                  "value": "'$cloud_region'"
+                }
+              ],
+              "limit": 1000,
+              "meta": {
+                "logMessageLike": "",
+                "otelEnabled": true,
+                "otelVersion": "latest"
+              },
+              "mode": "list",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "DESC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "logs",
+              "table": "otel_logs"
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "logs",
+          "rawSql": "-- variables provided by prometheus:\n-- $cloud_region, $host_name, $container_name\n-- log volume\nSELECT toStartOfInterval(\n    Timestamp,\n    toIntervalMillisecond($__interval_ms * 6)\n  ) as timestamp,\n  countIf(\n    SeverityNumber \u003e= 21\n    AND SeverityNumber \u003c= 24\n  ) as fatal,\n  countIf(\n    SeverityNumber \u003e= 17\n    AND SeverityNumber \u003c= 20\n  ) as error,\n  countIf(\n    SeverityNumber \u003e= 13\n    AND SeverityNumber \u003c= 16\n  ) as warn,\n  countIf(\n    SeverityNumber \u003e= 9\n    AND SeverityNumber \u003c= 12\n  ) as info,\n  countIf(\n    SeverityNumber \u003e= 5\n    AND SeverityNumber \u003c= 8\n  ) as debug,\n  countIf(\n    SeverityNumber \u003e= 1\n    AND SeverityNumber \u003c= 4\n  ) as trace,\n  countIf(\n    SeverityNumber = 0\n    OR SeverityNumber \u003e= 25\n  ) as unknown\nFROM default.otel_logs\nWHERE (\n    timestamp \u003e= $__fromTime\n    AND timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  ) -- map key must exist\n  AND mapContains(ResourceAttributes, 'container.name')\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\nGROUP BY timestamp\nORDER BY timestamp DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "grafana-clickhouse-datasource",
+        "uid": "clickhouse"
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 29
+      },
+      "id": 12,
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "builderOptions": {
+            "columns": [
+              {
+                "hint": "trace_id",
+                "name": "TraceId"
+              },
+              {
+                "hint": "time",
+                "name": "Timestamp"
+              },
+              {
+                "hint": "log_level",
+                "name": "SeverityText"
+              },
+              {
+                "hint": "log_message",
+                "name": "Body"
+              },
+              {
+                "hint": "log_labels",
+                "name": "LogAttributes"
+              }
+            ],
+            "database": "default",
+            "filters": [
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "hint": "time",
+                "key": "",
+                "operator": "WITH IN DASHBOARD TIME RANGE",
+                "type": "datetime"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "hint": "log_level",
+                "key": "",
+                "operator": "IS ANYTHING",
+                "type": "string"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "ResourceAttributes",
+                "label": "ResourceAttributes",
+                "mapKey": "host.name",
+                "operator": "=",
+                "type": "Map(LowCardinality(String), String)",
+                "value": "'$host_name'"
+              },
+              {
+                "condition": "AND",
+                "filterType": "custom",
+                "key": "ResourceAttributes",
+                "label": "ResourceAttributes",
+                "mapKey": "cloud.region",
+                "operator": "=",
+                "type": "Map(LowCardinality(String), String)",
+                "value": "'$cloud_region'"
+              }
+            ],
+            "limit": 1000,
+            "meta": {
+              "logMessageLike": "",
+              "otelEnabled": true,
+              "otelVersion": "latest"
+            },
+            "mode": "list",
+            "orderBy": [
+              {
+                "default": true,
+                "dir": "DESC",
+                "hint": "time",
+                "name": ""
+              }
+            ],
+            "queryType": "logs",
+            "table": "otel_logs"
+          },
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "clickhouse"
+          },
+          "editorType": "sql",
+          "format": 2,
+          "meta": {
+            "builderOptions": {
+              "columns": [
+                {
+                  "hint": "trace_id",
+                  "name": "TraceId"
+                },
+                {
+                  "hint": "time",
+                  "name": "Timestamp"
+                },
+                {
+                  "hint": "log_level",
+                  "name": "SeverityText"
+                },
+                {
+                  "hint": "log_message",
+                  "name": "Body"
+                },
+                {
+                  "hint": "log_labels",
+                  "name": "LogAttributes"
+                }
+              ],
+              "database": "default",
+              "filters": [
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "time",
+                  "key": "",
+                  "operator": "WITH IN DASHBOARD TIME RANGE",
+                  "type": "datetime"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "hint": "log_level",
+                  "key": "",
+                  "operator": "IS ANYTHING",
+                  "type": "string"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "ResourceAttributes",
+                  "label": "ResourceAttributes",
+                  "mapKey": "host.name",
+                  "operator": "=",
+                  "type": "Map(LowCardinality(String), String)",
+                  "value": "'$host_name'"
+                },
+                {
+                  "condition": "AND",
+                  "filterType": "custom",
+                  "key": "ResourceAttributes",
+                  "label": "ResourceAttributes",
+                  "mapKey": "cloud.region",
+                  "operator": "=",
+                  "type": "Map(LowCardinality(String), String)",
+                  "value": "'$cloud_region'"
+                }
+              ],
+              "limit": 1000,
+              "meta": {
+                "logMessageLike": "",
+                "otelEnabled": true,
+                "otelVersion": "latest"
+              },
+              "mode": "list",
+              "orderBy": [
+                {
+                  "default": true,
+                  "dir": "DESC",
+                  "hint": "time",
+                  "name": ""
+                }
+              ],
+              "queryType": "logs",
+              "table": "otel_logs"
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "logs",
+          "rawSql": "SELECT Timestamp as \"timestamp\",\n  Body as \"body\",\n  SeverityText as \"level\",\n  SeverityNumber as \"level_number\",\n  mapConcat(LogAttributes, ResourceAttributes) as \"labels\",\n  TraceId as \"traceID\"\nFROM \"default\".\"otel_logs\"\nWHERE (\n    timestamp \u003e= $__fromTime\n    AND timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  ) -- map key must exist\n  AND mapContains(ResourceAttributes, 'container.name')\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\n  AND (body LIKE '%$content%')\nORDER BY timestamp DESC\nLIMIT 500;",
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "logs"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
+  "tags": ["docker", "podman", "otelcol", "prometheus"],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "Prometheus",
+          "value": "prometheus"
+        },
+        "includeAll": false,
+        "label": "Data Source",
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "text": "zjusct-cluster",
+          "value": "zjusct-cluster"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "definition": "label_values(cloud_region)",
+        "includeAll": false,
+        "label": "Cloud Region",
+        "name": "cloud_region",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(cloud_region)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "storage",
+          "value": "storage"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "definition": "label_values({cloud_region=\"$cloud_region\"},host_name)",
+        "includeAll": false,
+        "label": "Host Name",
+        "name": "host_name",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values({cloud_region=\"$cloud_region\"},host_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allValue": "ALL",
+        "current": {
+          "text": "main",
+          "value": "main"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
+        "definition": "label_values({cloud_region=\"$cloud_region\", host_name=\"$host_name\"},container_name)",
+        "description": "",
+        "includeAll": true,
+        "label": "Container Name",
+        "name": "container_name",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values({cloud_region=\"$cloud_region\", host_name=\"$host_name\"},container_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "label": "Content",
+        "name": "content",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "OpenTelemetry Collector Container Receiver",
+  "uid": "be10un9edmmf4c",
+  "version": 17,
+  "weekStart": ""
+}

@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 6,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -199,11 +199,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "builderOptions": {
@@ -374,9 +375,9 @@
               "table": "otel_logs"
             }
           },
-          "pluginVersion": "4.5.1",
+          "pluginVersion": "4.8.2",
           "queryType": "logs",
-          "rawSql": "SELECT toStartOfInterval(\n    Timestamp,\n    toIntervalMillisecond($__interval_ms * 6)\n  ) as timestamp,\n  countIf(\n    SeverityNumber \u003e= 21\n    AND SeverityNumber \u003c= 24\n  ) as fatal,\n  countIf(\n    SeverityNumber \u003e= 17\n    AND SeverityNumber \u003c= 20\n  ) as error,\n  countIf(\n    SeverityNumber \u003e= 13\n    AND SeverityNumber \u003c= 16\n  ) as warn,\n  countIf(\n    SeverityNumber \u003e= 9\n    AND SeverityNumber \u003c= 12\n  ) as info,\n  countIf(\n    SeverityNumber \u003e= 5\n    AND SeverityNumber \u003c= 8\n  ) as debug,\n  countIf(\n    SeverityNumber \u003e= 1\n    AND SeverityNumber \u003c= 4\n  ) as trace,\n  countIf(\n    SeverityNumber = 0\n    OR SeverityNumber \u003e= 25\n  ) as unknown\nFROM default.otel_logs\nWHERE (\n    timestamp \u003e= $__fromTime\n    AND timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\n  AND (Body LIKE '%$content%')\nGROUP BY timestamp\nORDER BY timestamp DESC;",
+          "rawSql": "SELECT toStartOfInterval(\n    Timestamp,\n    toIntervalMillisecond($__interval_ms * 6)\n  ) as timestamp,\n  countIf(\n    SeverityNumber \u003e= 21\n    AND SeverityNumber \u003c= 24\n  ) as fatal,\n  countIf(\n    SeverityNumber \u003e= 17\n    AND SeverityNumber \u003c= 20\n  ) as error,\n  countIf(\n    SeverityNumber \u003e= 13\n    AND SeverityNumber \u003c= 16\n  ) as warn,\n  countIf(\n    SeverityNumber \u003e= 9\n    AND SeverityNumber \u003c= 12\n  ) as info,\n  countIf(\n    SeverityNumber \u003e= 5\n    AND SeverityNumber \u003c= 8\n  ) as debug,\n  countIf(\n    SeverityNumber \u003e= 1\n    AND SeverityNumber \u003c= 4\n  ) as trace,\n  countIf(\n    SeverityNumber = 0\n    OR SeverityNumber \u003e= 25\n  ) as unknown\nFROM default.otel_logs\nWHERE (\n    timestamp \u003e= $__fromTime\n    AND timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  -- map key must exist\n  AND mapContains(LogAttributes, 'log.file.path')\n  AND mapContains(LogAttributes, 'log.file.name')\n  AND (\n    '$log_file_path' = 'ALL'\n    OR LogAttributes ['log.file.path'] = '$log_file_path'\n  )\n  AND (\n    '$log_file_name' = 'ALL'\n    OR LogAttributes ['log.file.name'] = '$log_file_name'\n  )\n  AND (Body LIKE '%$content%')\n  AND (\n    SeverityText IN (\n      SELECT *\n      FROM\n      VALUES($level)\n    )\n  )\nGROUP BY timestamp\nORDER BY timestamp DESC;",
           "refId": "A"
         }
       ],
@@ -402,6 +403,7 @@
       "id": 2,
       "options": {
         "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
@@ -410,7 +412,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "builderOptions": {
@@ -581,9 +583,9 @@
               "table": "otel_logs"
             }
           },
-          "pluginVersion": "4.5.1",
+          "pluginVersion": "4.8.2",
           "queryType": "logs",
-          "rawSql": "SELECT Timestamp as \"timestamp\",\n  Body as \"body\",\n  SeverityText as \"level\",\n  SeverityNumber as \"level_number\",\n  mapConcat(LogAttributes, ResourceAttributes) as \"labels\",\n  TraceId as \"traceID\"\nFROM \"default\".\"otel_logs\"\nWHERE (\n    timestamp \u003e= $__fromTime\n    AND timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\n  AND (body LIKE '%$content%')\n  AND (\n    SeverityText IN (\n      SELECT *\n      FROM\n      VALUES($level)\n    )\n  )\nORDER BY timestamp DESC\nLIMIT 500;",
+          "rawSql": "SELECT Timestamp as \"timestamp\",\n  Body as \"body\",\n  SeverityText as \"level\",\n  SeverityNumber as \"level_number\",\n  mapConcat(LogAttributes, ResourceAttributes) as \"labels\",\n  TraceId as \"traceID\"\nFROM \"default\".\"otel_logs\"\nWHERE (\n    timestamp \u003e= $__fromTime\n    AND timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  ) -- map key must exist\n  AND mapContains(LogAttributes, 'log.file.path')\n  AND mapContains(LogAttributes, 'log.file.name')\n  AND (\n    '$log_file_path' = 'ALL'\n    OR LogAttributes ['log.file.path'] = '$log_file_path'\n  )\n  AND (\n    '$log_file_name' = 'ALL'\n    OR LogAttributes ['log.file.name'] = '$log_file_name'\n  )\n  AND (body LIKE '%$content%')\n  AND (\n    SeverityText IN (\n      SELECT *\n      FROM\n      VALUES($level)\n    )\n  )\nORDER BY timestamp DESC\nLIMIT 500;",
           "refId": "A"
         }
       ],
@@ -658,20 +660,14 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": {
-          "type": "grafana-clickhouse-datasource",
-          "uid": "${datasource}"
-        },
-        "definition": "SELECT \n  ResourceAttributes['service.name'] AS service_name\nFROM otel_logs\nWHERE ( Timestamp \u003e= $__fromTime AND Timestamp \u003c= $__toTime ) \n  AND (NOT empty(service_name))\n  AND ( '$cloud_region' = 'ALL' \n    OR ResourceAttributes['cloud.region'] = '$cloud_region')\n  AND ( '$host_name' = 'ALL' \n    OR ResourceAttributes['host.name'] = '$host_name')\nGROUP BY service_name;",
-        "description": "",
+        "definition": "SELECT LogAttributes ['log.file.path'] AS log_file_path\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(log_file_path))\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\nGROUP BY log_file_path;",
         "includeAll": true,
-        "label": "Service Name",
-        "name": "service_name",
+        "label": "Log File Path",
+        "name": "log_file_path",
         "options": [],
-        "query": "SELECT \n  ResourceAttributes['service.name'] AS service_name\nFROM otel_logs\nWHERE ( Timestamp \u003e= $__fromTime AND Timestamp \u003c= $__toTime ) \n  AND (NOT empty(service_name))\n  AND ( '$cloud_region' = 'ALL' \n    OR ResourceAttributes['cloud.region'] = '$cloud_region')\n  AND ( '$host_name' = 'ALL' \n    OR ResourceAttributes['host.name'] = '$host_name')\nGROUP BY service_name;",
+        "query": "SELECT LogAttributes ['log.file.path'] AS log_file_path\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(log_file_path))\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\nGROUP BY log_file_path;",
         "refresh": 1,
         "regex": "",
-        "sort": 1,
         "type": "query"
       },
       {
@@ -680,19 +676,14 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": {
-          "type": "grafana-clickhouse-datasource",
-          "uid": "${datasource}"
-        },
-        "definition": "SELECT \n  ResourceAttributes['container.name'] AS container_name\nFROM otel_logs\nWHERE ( Timestamp \u003e= $__fromTime AND Timestamp \u003c= $__toTime ) \n  AND (NOT empty(container_name))\n  AND ( '$cloud_region' = 'ALL' \n    OR ResourceAttributes['cloud.region'] = '$cloud_region')\n  AND ( '$host_name' = 'ALL' \n    OR ResourceAttributes['host.name'] = '$host_name')\nGROUP BY container_name;",
+        "definition": "SELECT LogAttributes ['log.file.name'] AS log_file_name\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(log_file_name))\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$log_file_path' = 'ALL'\n    OR LogAttributes ['log.file.path'] = '$log_file_path'\n  )\nGROUP BY log_file_name;",
         "includeAll": true,
-        "label": "Container Name",
-        "name": "container_name",
+        "label": "Log File Name",
+        "name": "log_file_name",
         "options": [],
-        "query": "SELECT \n  ResourceAttributes['container.name'] AS container_name\nFROM otel_logs\nWHERE ( Timestamp \u003e= $__fromTime AND Timestamp \u003c= $__toTime ) \n  AND (NOT empty(container_name))\n  AND ( '$cloud_region' = 'ALL' \n    OR ResourceAttributes['cloud.region'] = '$cloud_region')\n  AND ( '$host_name' = 'ALL' \n    OR ResourceAttributes['host.name'] = '$host_name')\nGROUP BY container_name;",
+        "query": "SELECT LogAttributes ['log.file.name'] AS log_file_name\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(log_file_name))\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$log_file_path' = 'ALL'\n    OR LogAttributes ['log.file.path'] = '$log_file_path'\n  )\nGROUP BY log_file_name;",
         "refresh": 1,
         "regex": "",
-        "sort": 1,
         "type": "query"
       },
       {
@@ -715,20 +706,20 @@
       },
       {
         "current": {
-          "text": ["All"],
+          "text": "All",
           "value": ["$__all"]
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
           "uid": "clickhouse"
         },
-        "definition": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\nGROUP BY level;",
+        "definition": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$log_file_path' = 'ALL'\n    OR LogAttributes ['log.file.path'] = '$log_file_path'\n  )\n  AND (\n    '$log_file_name' = 'ALL'\n    OR LogAttributes ['log.file.name'] = '$log_file_name'\n  )\nGROUP BY level;",
         "includeAll": true,
         "label": "Level",
         "multi": true,
         "name": "level",
         "options": [],
-        "query": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\nGROUP BY level;",
+        "query": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$log_file_path' = 'ALL'\n    OR LogAttributes ['log.file.path'] = '$log_file_path'\n  )\n  AND (\n    '$log_file_name' = 'ALL'\n    OR LogAttributes ['log.file.name'] = '$log_file_name'\n  )\nGROUP BY level;",
         "refresh": 2,
         "regex": "",
         "sort": 1,
@@ -744,6 +735,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Filelog Receiver",
   "uid": "ae11zuc35vv28f",
-  "version": 1,
+  "version": 5,
   "weekStart": ""
 }

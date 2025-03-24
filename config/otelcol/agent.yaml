@@ -34,6 +34,9 @@ receivers:
     include:
       - /var/lib/docker/containers/*/*-json.log
       - /opt/docker/containers/*/*-json.log # openWRT
+    include_file_path: true
+    include_file_name_resolved: true
+    include_file_path_resolved: true
     operators:
       - type: container
         format: docker
@@ -64,8 +67,9 @@ receivers:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md
   filelog/nginx_access:
     include: /var/log/nginx/otel.log
-    resource:
-      service.name: nginx-access
+    include_file_path: true
+    include_file_name_resolved: true
+    include_file_path_resolved: true
     operators:
       - type: json_parser
         timestamp:
@@ -91,8 +95,9 @@ receivers:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md
   filelog/nginx_error:
     include: /var/log/nginx/error.log
-    resource:
-      service.name: nginx-error
+    include_file_path: true
+    include_file_name_resolved: true
+    include_file_path_resolved: true
     operators:
       - type: regex_parser
         regex: '(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<severity>\w+)\] (?P<pid>\d+)#(?P<tid>\d+): (?:\*(?P<cid>\d+) )?(?P<message>[^,]+)(?:, (?P<kv>.+))?'
@@ -211,6 +216,12 @@ receivers:
           INFO2: 5 # notice
           INFO: 6
           DEBUG: 7
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md
+  filelog/auditd:
+    include: /var/log/audit/audit.log
+    include_file_path: true
+    include_file_name_resolved: true
+    include_file_path_resolved: true
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver
   hostmetrics/fast:
     collection_interval: 15s
@@ -329,7 +340,7 @@ service:
   extensions: [bearertokenauth, pprof, zpages]
   pipelines:
     logs:
-      receivers: [otlp, filelog/docker]
+      receivers: [otlp, filelog/docker, filelog/auditd]
       processors: [memory_limiter, batch, resourcedetection, resource/cloud]
       exporters: [otlphttp/with_auth]
     logs/journald:

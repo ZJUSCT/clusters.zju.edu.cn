@@ -10,9 +10,9 @@ export $(cut -d= -f1 .env.template)
 set -x
 
 # validate otelcol config
-otelcol-contrib validate --config ./config/otelcol/agent.yaml
-otelcol-contrib validate --config ./config/otelcol/gateway.yaml
-otelcol-contrib validate --config ./config/otelcol/snmp.yaml
+for file in ./config/otelcol/*.yaml; do
+  otelcol-contrib validate --config "$file"
+done
 
 # validate compose file
 docker compose config > /dev/null

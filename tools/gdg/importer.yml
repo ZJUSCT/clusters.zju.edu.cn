@@ -3,7 +3,8 @@ contexts:
   zjusct:
     #storage: ""
     url: https://grafana.clusters.zjusct.io
-    # use anonymous access
+    user_name: admin
+    password: "" # environment variable override
     watched:
       - "single"
       - "combined"
