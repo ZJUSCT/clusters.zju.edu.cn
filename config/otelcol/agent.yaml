@@ -142,7 +142,7 @@ receivers:
         pair_delimiter: ','
         # kv is always a string even if it is empty, so do not use
         # type(attributes["kv"]) != "nil"
-        if: 'attributes["kv"]) != ""'
+        if: 'attributes["kv"] != ""'
       - type: remove
         field: attributes["kv"]
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver/otlpreceiver
