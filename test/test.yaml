@@ -3,9 +3,9 @@
 
 # configuration for local test
 receivers:
-  tcpcheck:
-    # target:
-    # endpoint: 172.25.2.23:22
+  # tcpcheck:
+  #   targets:
+  #     - endpoint: 172.25.2.23:22
     # collection_interval: 60s
       # - 172.25.2.23:22
       # - 172.25.2.24:22
@@ -44,22 +44,27 @@ processors:
     limit_mib: 1536
     spike_limit_mib: 512
     check_interval: 5s
-  transform/journald:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        statements:
-          - flatten(attributes)
-  #resource:
-  #  attributes:
-  #  - key: host.name
-  #    value: "testbench"
-  #    action: upsert
+  resource/cloud-cluster:
+    attributes:
+    - key: cloud.region
+      value: "zjusct-cluster"
+      action: insert
+  resource/cloud-zju:
+    attributes:
+    - key: cloud.region
+      value: "zju"
+      action: insert
+  resource/cloud-internet:
+    attributes:
+    - key: cloud.region
+      value: "internet"
+      action: insert
 
 service:
   pipelines:
-    metrics:
-      receivers: [tlscheck]
+    metrics/tcp-cluster:
+      receivers: [tcpcheck]
+      processors: [memory_limiter, batch, resource/cloud-cluster]
       exporters: [otlp]
   # https://github.com/open-telemetry/opentelemetry-collector/discussions/6941
   # 8888 is enabled by default, so change a port to avoid conflict with native collector

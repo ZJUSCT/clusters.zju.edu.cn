@@ -39,6 +39,59 @@ receivers:
       - endpoint: mirrors.zju.edu.cn:443
       - endpoint: clusters.zju.edu.cn:443
       - endpoint: www.clusters.zjusct.io:443
+      - endpoint: www.cc98.org:443
+      - endpoint: www.nexushd.org:443
+      - endpoint: www.zjuers.com:443
+      - endpoint: star-home.top:4430
+      - endpoint: www.bowling233.top:443
+      - endpoint: note.bowling233.top:443
+      - endpoint: www.baidu.com:443
+      - endpoint: www.qq.com:443
+      - endpoint: www.bilibili.com:443
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/httpcheckreceiver
+  # https://github.com/open-telemetry/opentelemetry-collector/blob/main/config/configtls/README.md
+  httpcheck/cluster:
+    targets:
+      - method: GET
+        endpoints:
+          # mgmt
+          - https://172.25.3.5
+          - https://172.25.3.9
+          - https://172.25.3.10
+          - https://172.25.3.11
+          - https://172.25.3.23
+          - https://172.25.3.24
+          - https://172.25.3.60
+          - https://172.25.3.61
+          - https://172.25.3.62
+          - https://172.25.3.63
+          - https://172.25.3.64
+          - https://172.25.3.70
+          - https://172.25.3.71
+          - https://172.25.3.80
+          # service
+          - https://root:8006/
+          - http://bridge:7687
+          - http://storage:8080/
+          - http://storage:3000/
+        tls:
+          insecure_skip_verify: true
+  httpcheck/zju:
+    targets:
+      - method: GET
+        endpoints:
+          - https://www.cc98.org/
+          - https://mirror.zju.edu.cn/
+          - https://www.zju.edu.cn/
+          - https://www.clusters.zjusct.io/
+  httpcheck/internet:
+    targets:
+      - method: GET
+        endpoints:
+          - https://www.baidu.com/
+          - https://www.qq.com/
+          - https://www.zhihu.com/
+          - https://www.bilibili.com/
 
 processors:
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
@@ -50,11 +103,21 @@ processors:
     # 25% of limit up to 2G
     spike_limit_mib: 512
     check_interval: 5s
-  resource/cloud:
+  resource/cloud-cluster:
     attributes:
-      - key: cloud.region
-        value: "zjusct-cluster"
-        action: insert
+    - key: cloud.region
+      value: "zjusct-cluster"
+      action: insert
+  resource/cloud-campus:
+    attributes:
+    - key: cloud.region
+      value: "zju"
+      action: insert
+  resource/cloud-internet:
+    attributes:
+    - key: cloud.region
+      value: "internet"
+      action: insert
 
 exporters:
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
@@ -66,7 +129,19 @@ exporters:
 
 service:
   pipelines:
-    metrics:
+    metrics/tls:
       receivers: [tlscheck]
-      processors: [memory_limiter, batch, resource/cloud]
+      processors: [memory_limiter, batch]
+      exporters: [otlp/internal]
+    metrics/http-cluster:
+      receivers: [httpcheck/cluster]
+      processors: [memory_limiter, batch, resource/cloud-cluster]
+      exporters: [otlp/internal]
+    metrics/http-zju:
+      receivers: [httpcheck/zju]
+      processors: [memory_limiter, batch, resource/cloud-campus]
+      exporters: [otlp/internal]
+    metrics/http-internet:
+      receivers: [httpcheck/internet]
+      processors: [memory_limiter, batch, resource/cloud-internet]
       exporters: [otlp/internal]
