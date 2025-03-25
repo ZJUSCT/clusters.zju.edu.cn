@@ -18,6 +18,7 @@ services:
     # receiver ports
       - 514:514/udp   # syslog receiver
       - 4319:4318     # OTLP http receiver, conflict with host otel-collector
+      - 2055:2055/udp # NetFlow receiver
     restart: unless-stopped
     # healthcheck:
     # cannot use any command in this image...
