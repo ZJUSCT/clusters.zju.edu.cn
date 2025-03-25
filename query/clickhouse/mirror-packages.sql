@@ -19,9 +19,9 @@ WHERE (
     ResourceAttributes ['cloud.region'] = 'zjusct-falcon'
   )
   AND (ResourceAttributes ['host.name'] = 'zjumirror')
-  AND (ResourceAttributes ['service.name'] = 'nginx-access')
   AND (LogAttributes ['log.file.name'] = 'otel.log')
   AND (
+    -- extracts the first segment of a URL path after the initial slash
     match(LogAttributes ['url.path'], '^/([^/]+)/.*')
   )
 GROUP BY ALL -- 按请求次数降序排列，然后对每个时间段取前 5 个
