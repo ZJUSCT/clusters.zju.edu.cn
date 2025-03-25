@@ -1495,6 +1495,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Container Receiver",
   "uid": "be10un9edmmf4c",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }

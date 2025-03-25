@@ -719,6 +719,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Filelog Receiver",
   "uid": "ae11zuc35vv28f",
-  "version": 5,
+  "version": 6,
   "weekStart": ""
 }

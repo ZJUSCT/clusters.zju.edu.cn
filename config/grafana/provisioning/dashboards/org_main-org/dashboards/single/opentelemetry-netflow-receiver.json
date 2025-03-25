@@ -1,0 +1,417 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations \u0026 Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 13,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "clickhouse"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "clickhouse"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT toStartOfInterval(\n    Timestamp,\n    toIntervalMillisecond($__interval_ms * 10)\n  ) AS timestamp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'icmp'\n  ) AS icmp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'udp'\n  ) AS udp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'tcp'\n  ) AS tcp\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY timestamp\nORDER BY timestamp DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Transport Type Volume",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "clickhouse"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes_per_second"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT concat(\n    LogAttributes ['destination.address'],\n    ':',\n    LogAttributes ['destination.port']\n  ) AS destination,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime) / 1000) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY destination\nORDER BY bytes_per_second DESC\nLIMIT 5;",
+          "refId": "A"
+        }
+      ],
+      "title": "Top Destination",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "clickhouse"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes_per_second"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT concat(\n    LogAttributes ['source.address'],\n    ':',\n    LogAttributes ['source.port']\n  ) AS source,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime) / 1000) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY source\nORDER BY bytes_per_second DESC\nLIMIT 5;",
+          "refId": "A"
+        }
+      ],
+      "title": "Top Source",
+      "type": "table"
+    }
+  ],
+  "preload": false,
+  "refresh": "",
+  "schemaVersion": 40,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": "ALL",
+        "current": {
+          "text": "zjusct-cluster",
+          "value": "zjusct-cluster"
+        },
+        "definition": "SELECT ResourceAttributes ['cloud.region'] AS cloud_region\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(cloud_region))\nGROUP BY cloud_region;",
+        "includeAll": true,
+        "label": "Cloud Region",
+        "name": "cloud_region",
+        "options": [],
+        "query": "SELECT ResourceAttributes ['cloud.region'] AS cloud_region\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(cloud_region))\nGROUP BY cloud_region;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allValue": "ALL",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "definition": "SELECT LogAttributes ['flow.sampler_address'] AS flow_sampler_address\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY flow_sampler_address;",
+        "description": "",
+        "includeAll": true,
+        "label": "Flow Sampler Address",
+        "name": "flow_sampler_address",
+        "options": [],
+        "query": "SELECT LogAttributes ['flow.sampler_address'] AS flow_sampler_address\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY flow_sampler_address;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allValue": "ALL",
+        "current": {
+          "text": "netflow_v9",
+          "value": "netflow_v9"
+        },
+        "definition": "SELECT LogAttributes ['flow.type'] AS flow_type\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY flow_type;",
+        "includeAll": true,
+        "label": "Flow Type",
+        "name": "flow_type",
+        "options": [],
+        "query": "SELECT LogAttributes ['flow.type'] AS flow_type\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY flow_type;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allValue": "ALL",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "definition": "SELECT LogAttributes ['network.transport'] AS transport_type\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY transport_type;",
+        "includeAll": true,
+        "label": "Transport Type",
+        "name": "transport_type",
+        "options": [],
+        "query": "SELECT LogAttributes ['network.transport'] AS transport_type\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY transport_type;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "OpenTelemetry NetFlow Receiver",
+  "uid": "cegvjfputxf5sf",
+  "version": 19,
+  "weekStart": ""
+}

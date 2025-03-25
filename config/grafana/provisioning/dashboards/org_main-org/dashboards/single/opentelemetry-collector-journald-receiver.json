@@ -725,6 +725,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Journald Receiver",
   "uid": "degtj5w7vhreob",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }

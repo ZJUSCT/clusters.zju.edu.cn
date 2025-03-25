@@ -703,6 +703,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Syslog Receiver",
   "uid": "begv2dk886w3kb",
-  "version": 4,
+  "version": 5,
   "weekStart": ""
 }
