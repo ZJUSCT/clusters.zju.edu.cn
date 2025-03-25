@@ -39,10 +39,10 @@ receivers:
         endpoint: otelcol-gateway:4317
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/netflowreceiver
   netflow:
-    - scheme: netflow # compatible with Huawei NetStream v9
-      port: 2055
-      sockets: 16
-      workers: 32
+    scheme: netflow # compatible with Huawei NetStream v9
+    port: 2055
+    sockets: 16
+    workers: 32
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/syslogreceiver
   syslog:
     udp:
