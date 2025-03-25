@@ -1,3 +1,4 @@
+-- VARIABLES
 -- service_name
 SELECT ResourceAttributes ['service.name'] AS service_name
 FROM otel_logs
@@ -15,6 +16,27 @@ WHERE (
     OR ResourceAttributes ['host.name'] = '$host_name'
   )
 GROUP BY service_name;
+-- level
+SELECT SeverityText as level
+FROM otel_logs
+WHERE (
+    Timestamp >= $__fromTime
+    AND Timestamp <= $__toTime
+  )
+  AND (
+    '$cloud_region' = 'ALL'
+    OR ResourceAttributes ['cloud.region'] = '$cloud_region'
+  )
+  AND (
+    '$host_name' = 'ALL'
+    OR ResourceAttributes ['host.name'] = '$host_name'
+  )
+  AND (
+    '$service_name' = 'ALL'
+    OR ResourceAttributes ['service.name'] = '$service_name'
+  )
+GROUP BY level;
+-- PANELS
 -- log volume
 SELECT toStartOfInterval(
     Timestamp,

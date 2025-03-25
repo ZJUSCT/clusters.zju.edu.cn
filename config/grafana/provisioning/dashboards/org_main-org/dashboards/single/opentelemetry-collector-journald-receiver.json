@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 11,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -697,19 +697,19 @@
       {
         "current": {
           "text": "All",
-          "value": ["$__all"]
+          "value": "$__all"
         },
         "datasource": {
           "type": "grafana-clickhouse-datasource",
           "uid": "clickhouse"
         },
-        "definition": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\nGROUP BY level;",
+        "definition": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\nGROUP BY level;",
         "includeAll": true,
         "label": "Level",
         "multi": true,
         "name": "level",
         "options": [],
-        "query": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\n  AND (\n    '$container_name' = 'ALL'\n    OR ResourceAttributes ['container.name'] = '$container_name'\n  )\nGROUP BY level;",
+        "query": "SELECT SeverityText as level\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$host_name' = 'ALL'\n    OR ResourceAttributes ['host.name'] = '$host_name'\n  )\n  AND (\n    '$service_name' = 'ALL'\n    OR ResourceAttributes ['service.name'] = '$service_name'\n  )\nGROUP BY level;",
         "refresh": 2,
         "regex": "",
         "sort": 1,
@@ -725,6 +725,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Journald Receiver",
   "uid": "degtj5w7vhreob",
-  "version": 5,
+  "version": 2,
   "weekStart": ""
 }

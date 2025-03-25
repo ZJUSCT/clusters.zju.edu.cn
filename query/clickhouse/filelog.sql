@@ -1,4 +1,5 @@
--- log file name and path
+-- VARIABLES
+-- log_file_path
 SELECT LogAttributes ['log.file.path'] AS log_file_path
 FROM otel_logs
 WHERE (
@@ -15,26 +16,6 @@ WHERE (
     OR ResourceAttributes ['host.name'] = '$host_name'
   )
 GROUP BY log_file_path;
-SELECT LogAttributes ['log.file.name'] AS log_file_name
-FROM otel_logs
-WHERE (
-    Timestamp >= $__fromTime
-    AND Timestamp <= $__toTime
-  )
-  AND (NOT empty(log_file_name))
-  AND (
-    '$cloud_region' = 'ALL'
-    OR ResourceAttributes ['cloud.region'] = '$cloud_region'
-  )
-  AND (
-    '$host_name' = 'ALL'
-    OR ResourceAttributes ['host.name'] = '$host_name'
-  )
-  AND (
-    '$log_file_path' = 'ALL'
-    OR LogAttributes ['log.file.path'] = '$log_file_path'
-  )
-GROUP BY log_file_name;
 -- level
 SELECT SeverityText as level
 FROM otel_logs
@@ -54,11 +35,8 @@ WHERE (
     '$log_file_path' = 'ALL'
     OR LogAttributes ['log.file.path'] = '$log_file_path'
   )
-  AND (
-    '$log_file_name' = 'ALL'
-    OR LogAttributes ['log.file.name'] = '$log_file_name'
-  )
 GROUP BY level;
+-- PANELS
 -- log volume
 SELECT toStartOfInterval(
     Timestamp,
@@ -111,10 +89,6 @@ WHERE (
     '$log_file_path' = 'ALL'
     OR LogAttributes ['log.file.path'] = '$log_file_path'
   )
-  AND (
-    '$log_file_name' = 'ALL'
-    OR LogAttributes ['log.file.name'] = '$log_file_name'
-  )
   AND (Body LIKE '%$content%')
   AND (
     SeverityText IN (
@@ -150,10 +124,6 @@ WHERE (
   AND (
     '$log_file_path' = 'ALL'
     OR LogAttributes ['log.file.path'] = '$log_file_path'
-  )
-  AND (
-    '$log_file_name' = 'ALL'
-    OR LogAttributes ['log.file.name'] = '$log_file_name'
   )
   AND (body LIKE '%$content%')
   AND (
