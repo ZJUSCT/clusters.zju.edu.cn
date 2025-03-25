@@ -1,21 +1,18 @@
 -- VARIABLES
--- service_name
-SELECT ResourceAttributes ['service.name'] AS service_name
+-- host_name
+SELECT ResourceAttributes ['host.name'] AS host_name
 FROM otel_logs
 WHERE (
     Timestamp >= $__fromTime
     AND Timestamp <= $__toTime
   )
-  AND (NOT empty(service_name))
+  AND (NOT empty(host_name))
   AND (
     '$cloud_region' = 'ALL'
     OR ResourceAttributes ['cloud.region'] = '$cloud_region'
-  )
-  AND (
-    '$host_name' = 'ALL'
-    OR ResourceAttributes ['host.name'] = '$host_name'
-  )
-GROUP BY service_name;
+  ) -- This ensures syslog
+  AND LogAttributes ['net.host.port'] = '514'
+GROUP BY host_name;
 -- level
 SELECT SeverityText as level
 FROM otel_logs
@@ -30,12 +27,8 @@ WHERE (
   AND (
     '$host_name' = 'ALL'
     OR ResourceAttributes ['host.name'] = '$host_name'
-  ) --- map key must exist
-  AND mapContains(ResourceAttributes, 'service.name')
-  AND (
-    '$service_name' = 'ALL'
-    OR ResourceAttributes ['service.name'] = '$service_name'
-  )
+  ) -- This ensures syslog
+  AND LogAttributes ['net.host.port'] = '514'
 GROUP BY level;
 -- PANELS
 -- log volume
@@ -83,12 +76,8 @@ WHERE (
   AND (
     '$host_name' = 'ALL'
     OR ResourceAttributes ['host.name'] = '$host_name'
-  ) --- map key must exist
-  AND mapContains(ResourceAttributes, 'service.name')
-  AND (
-    '$service_name' = 'ALL'
-    OR ResourceAttributes ['service.name'] = '$service_name'
-  )
+  ) -- This ensures syslog
+  AND LogAttributes ['net.host.port'] = '514'
   AND (Body LIKE '%$content%')
   AND (
     SeverityText IN (
@@ -118,12 +107,8 @@ WHERE (
   AND (
     '$host_name' = 'ALL'
     OR ResourceAttributes ['host.name'] = '$host_name'
-  ) --- map key must exist
-  AND mapContains(ResourceAttributes, 'service.name')
-  AND (
-    '$service_name' = 'ALL'
-    OR ResourceAttributes ['service.name'] = '$service_name'
-  )
+  ) -- This ensures syslog
+  AND LogAttributes ['net.host.port'] = '514'
   AND (body LIKE '%$content%')
   AND (
     SeverityText IN (

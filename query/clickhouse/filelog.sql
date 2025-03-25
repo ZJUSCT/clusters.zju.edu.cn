@@ -30,7 +30,8 @@ WHERE (
   AND (
     '$host_name' = 'ALL'
     OR ResourceAttributes ['host.name'] = '$host_name'
-  )
+  ) -- map key must exist
+  AND mapContains(LogAttributes, 'log.file.path')
   AND (
     '$log_file_path' = 'ALL'
     OR LogAttributes ['log.file.path'] = '$log_file_path'
@@ -84,7 +85,6 @@ WHERE (
     OR ResourceAttributes ['host.name'] = '$host_name'
   ) -- map key must exist
   AND mapContains(LogAttributes, 'log.file.path')
-  AND mapContains(LogAttributes, 'log.file.name')
   AND (
     '$log_file_path' = 'ALL'
     OR LogAttributes ['log.file.path'] = '$log_file_path'
@@ -120,7 +120,6 @@ WHERE (
     OR ResourceAttributes ['host.name'] = '$host_name'
   ) -- map key must exist
   AND mapContains(LogAttributes, 'log.file.path')
-  AND mapContains(LogAttributes, 'log.file.name')
   AND (
     '$log_file_path' = 'ALL'
     OR LogAttributes ['log.file.path'] = '$log_file_path'
