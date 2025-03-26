@@ -217,8 +217,22 @@ receivers:
           INFO: 6
           DEBUG: 7
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md
-  filelog/auditd:
-    include: /var/log/audit/audit.log
+  filelog:
+    include:
+      # auditd
+      - /var/log/audit/audit.log
+      # mirror
+      - /var/log/ftpsync/debian/ftpsync-debian.log.0
+      - /var/log/ftpsync/debian/rsync-ftpsync-debian.log.0
+      - /var/log/ftpsync/debian/rsync-ftpsync-debian.error.0
+      - /var/log/ftpsync/debian-security/ftpsync-debian-security.log.0
+      - /var/log/ftpsync/debian-security/rsync-ftpsync-debian-security.log.0
+      - /var/log/ftpsync/kali/ftpsync-kali.log.0
+      - /var/log/ftpsync/kali/rsync-ftpsync-kali.log.0
+      - /var/log/ftpsync/ubuntu/ftpsync-ubuntu.log.0
+      - /var/log/ftpsync/ubuntu/rsync-ftpsync-ubuntu.log.0
+      - /var/log/rsync/*/rsync.log
+      - /var/log/pypi/latest.log
     include_file_path: true
     include_file_name_resolved: true
     include_file_path_resolved: true
@@ -340,7 +354,7 @@ service:
   extensions: [bearertokenauth, pprof, zpages]
   pipelines:
     logs:
-      receivers: [otlp, filelog/docker, filelog/auditd]
+      receivers: [otlp, filelog/docker, filelog]
       processors: [memory_limiter, batch, resourcedetection, resource/cloud]
       exporters: [otlphttp/with_auth]
     logs/journald:
