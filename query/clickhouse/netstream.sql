@@ -57,11 +57,7 @@ WHERE (
 GROUP BY transport_type;
 -- PANELS
 -- network transport type volume
-SELECT toStartOfInterval(
-    Timestamp,
-    toIntervalMillisecond($__interval_ms * 6)
-  ) AS timestamp,
-  sumIf(
+SELECT sumIf(
     toUInt64(LogAttributes ['flow.io.bytes']),
     LogAttributes ['network.transport'] = 'icmp'
   ) AS icmp,
@@ -83,8 +79,14 @@ WHERE (
     '$cloud_region' = 'ALL'
     OR ResourceAttributes ['cloud.region'] = '$cloud_region'
   )
-GROUP BY timestamp
-ORDER BY timestamp DESC;
+  AND (
+    '$flow_sampler_address' = 'ALL'
+    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'
+  )
+  AND (
+    '$flow_type' = 'ALL'
+    OR LogAttributes ['flow.type'] = '$flow_type'
+  );
 -- top 5 destination(ip and port) with speed
 SELECT concat(
     LogAttributes ['destination.address'],
@@ -93,7 +95,7 @@ SELECT concat(
   ) AS destination,
   sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,
   sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,
-  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime) / 1000) AS bytes_per_second
+  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime)) AS bytes_per_second
 FROM otel_logs
 WHERE (
     Timestamp >= $__fromTime
@@ -103,6 +105,14 @@ WHERE (
   AND (
     '$cloud_region' = 'ALL'
     OR ResourceAttributes ['cloud.region'] = '$cloud_region'
+  )
+  AND (
+    '$flow_sampler_address' = 'ALL'
+    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'
+  )
+  AND (
+    '$flow_type' = 'ALL'
+    OR LogAttributes ['flow.type'] = '$flow_type'
   )
   AND (
     '$transport_type' = 'ALL'
@@ -119,7 +129,7 @@ SELECT concat(
   ) AS source,
   sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,
   sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,
-  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime) / 1000) AS bytes_per_second
+  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime)) AS bytes_per_second
 FROM otel_logs
 WHERE (
     Timestamp >= $__fromTime
@@ -131,9 +141,111 @@ WHERE (
     OR ResourceAttributes ['cloud.region'] = '$cloud_region'
   )
   AND (
+    '$flow_sampler_address' = 'ALL'
+    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'
+  )
+  AND (
+    '$flow_type' = 'ALL'
+    OR LogAttributes ['flow.type'] = '$flow_type'
+  )
+  AND (
     '$transport_type' = 'ALL'
     OR LogAttributes ['network.transport'] = '$transport_type'
   )
 GROUP BY source
 ORDER BY bytes_per_second DESC
 LIMIT 5;
+-- top 5 dst and src with speed
+SELECT concat(
+    LogAttributes ['source.address'],
+    ':',
+    LogAttributes ['source.port'],
+    ' -> ',
+    LogAttributes ['destination.address'],
+    ':',
+    LogAttributes ['destination.port']
+  ) AS flow,
+  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,
+  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,
+  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime)) AS bytes_per_second
+FROM otel_logs
+WHERE (
+    Timestamp >= $__fromTime
+    AND Timestamp <= $__toTime
+  )
+  AND ScopeName = 'otelcol/netflowreceiver'
+  AND (
+    '$cloud_region' = 'ALL'
+    OR ResourceAttributes ['cloud.region'] = '$cloud_region'
+  )
+  AND (
+    '$flow_sampler_address' = 'ALL'
+    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'
+  )
+  AND (
+    '$flow_type' = 'ALL'
+    OR LogAttributes ['flow.type'] = '$flow_type'
+  )
+  AND (
+    '$transport_type' = 'ALL'
+    OR LogAttributes ['network.transport'] = '$transport_type'
+  )
+GROUP BY flow
+ORDER BY bytes_per_second DESC
+LIMIT 5;
+-- top 5 flow with speed
+SELECT concat(
+    LogAttributes ['source.address'],
+    ':',
+    LogAttributes ['source.port'],
+    ' -> ',
+    LogAttributes ['destination.address'],
+    ':',
+    LogAttributes ['destination.port']
+  ) AS flow,
+  LogAttributes ['flow.io.bytes'] AS total_bytes,
+  LogAttributes ['flow.io.packets'] AS total_packets,
+  fromUnixTimestamp(
+    intDiv(
+      toUInt64(LogAttributes ['flow.start']),
+      1000000000
+    )
+  ) AS start_time,
+  fromUnixTimestamp(
+    intDiv(toUInt64(LogAttributes ['flow.end']), 1000000000)
+  ) AS end_time,
+  intDiv(
+    (
+      toUInt64(LogAttributes ['flow.end']) - toUInt64(LogAttributes ['flow.start'])
+    ),
+    1000000000
+  ) AS duration,
+  if(
+    duration = 0,
+    0,
+    toUInt64(LogAttributes ['flow.io.bytes']) / duration
+  ) AS average_speed
+FROM otel_logs
+WHERE (
+    Timestamp >= $__fromTime
+    AND Timestamp <= $__toTime
+  )
+  AND ScopeName = 'otelcol/netflowreceiver'
+  AND (
+    '$cloud_region' = 'ALL'
+    OR ResourceAttributes ['cloud.region'] = '$cloud_region'
+  )
+  AND (
+    '$flow_sampler_address' = 'ALL'
+    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'
+  )
+  AND (
+    '$flow_type' = 'ALL'
+    OR LogAttributes ['flow.type'] = '$flow_type'
+  )
+  AND (
+    '$transport_type' = 'ALL'
+    OR LogAttributes ['network.transport'] = '$transport_type'
+  )
+ORDER BY average_speed DESC
+LIMIT 500;

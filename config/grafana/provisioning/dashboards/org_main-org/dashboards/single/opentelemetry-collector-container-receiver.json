@@ -1446,8 +1446,8 @@
       {
         "allValue": "ALL",
         "current": {
-          "text": "main",
-          "value": "main"
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "prometheus",
@@ -1488,13 +1488,13 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "OpenTelemetry Collector Container Receiver",
   "uid": "be10un9edmmf4c",
-  "version": 3,
+  "version": 5,
   "weekStart": ""
 }

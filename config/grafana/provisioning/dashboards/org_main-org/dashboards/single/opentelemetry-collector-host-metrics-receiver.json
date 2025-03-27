@@ -1224,7 +1224,7 @@
         "tooltip": {
           "hideZeros": false,
           "mode": "multi",
-          "sort": "desc"
+          "sort": "asc"
         }
       },
       "pluginVersion": "11.5.1",
@@ -3197,8 +3197,8 @@
       },
       {
         "current": {
-          "text": "zjusct-falcon",
-          "value": "zjusct-falcon"
+          "text": "zjusct-cluster",
+          "value": "zjusct-cluster"
         },
         "datasource": {
           "type": "prometheus",
@@ -3220,8 +3220,8 @@
       },
       {
         "current": {
-          "text": "zjugit",
-          "value": "zjugit"
+          "text": "storage",
+          "value": "storage"
         },
         "datasource": {
           "type": "prometheus",
@@ -3251,6 +3251,6 @@
   "timezone": "browser",
   "title": "OpenTelemetry Collector Host Metrics Receiver",
   "uid": "de100g4yd5xxcc",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

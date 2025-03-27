@@ -24,45 +24,149 @@
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "clickhouse"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto",
+              "wrapText": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes_per_second"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_bytes"
             },
-            "thresholdsStyle": {
-              "mode": "off"
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "duration"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "average_speed"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "average_speed"
+          }
+        ]
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
             }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT concat(\n    LogAttributes ['source.address'],\n    ':',\n    LogAttributes ['source.port'],\n    ' -\u003e ',\n    LogAttributes ['destination.address'],\n    ':',\n    LogAttributes ['destination.port']\n  ) AS flow,\n  LogAttributes ['flow.io.bytes'] AS total_bytes,\n  LogAttributes ['flow.io.packets'] AS total_packets,\n  fromUnixTimestamp(\n    intDiv(\n      toUInt64(LogAttributes ['flow.start']),\n      1000000000\n    )\n  ) AS start_time,\n  fromUnixTimestamp(\n    intDiv(toUInt64(LogAttributes ['flow.end']), 1000000000)\n  ) AS end_time,\n  intDiv(\n    (\n      toUInt64(LogAttributes ['flow.end']) - toUInt64(LogAttributes ['flow.start'])\n    ),\n    1000000000\n  ) AS duration,\n  if(\n    duration = 0,\n    0,\n    toUInt64(LogAttributes ['flow.io.bytes']) / duration\n  ) AS average_speed\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$flow_sampler_address' = 'ALL'\n    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'\n  )\n  AND (\n    '$flow_type' = 'ALL'\n    OR LogAttributes ['flow.type'] = '$flow_type'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nORDER BY average_speed DESC\nLIMIT 1000;",
+          "refId": "A"
+        }
+      ],
+      "title": "Top Flow",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
@@ -84,30 +188,40 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
+        "w": 12,
         "x": 0,
-        "y": 0
+        "y": 9
       },
       "id": 1,
+      "interval": "1s",
       "options": {
+        "displayMode": "gradient",
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
       },
       "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
             "type": "grafana-clickhouse-datasource",
-            "uid": "clickhouse"
+            "uid": "${datasource}"
           },
           "editorType": "sql",
           "format": 1,
@@ -123,17 +237,122 @@
           },
           "pluginVersion": "4.8.2",
           "queryType": "table",
-          "rawSql": "SELECT toStartOfInterval(\n    Timestamp,\n    toIntervalMillisecond($__interval_ms * 10)\n  ) AS timestamp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'icmp'\n  ) AS icmp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'udp'\n  ) AS udp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'tcp'\n  ) AS tcp\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY timestamp\nORDER BY timestamp DESC;",
+          "rawSql": "SELECT sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'icmp'\n  ) AS icmp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'udp'\n  ) AS udp,\n  sumIf(\n    toUInt64(LogAttributes ['flow.io.bytes']),\n    LogAttributes ['network.transport'] = 'tcp'\n  ) AS tcp\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$flow_sampler_address' = 'ALL'\n    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'\n  )\n  AND (\n    '$flow_type' = 'ALL'\n    OR LogAttributes ['flow.type'] = '$flow_type'\n  );",
           "refId": "A"
         }
       ],
       "title": "Transport Type Volume",
-      "type": "timeseries"
+      "type": "bargauge"
     },
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "clickhouse"
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bytes_per_second"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_bytes"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.5.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
+          "editorType": "sql",
+          "format": 1,
+          "meta": {
+            "builderOptions": {
+              "columns": [],
+              "database": "",
+              "limit": 1000,
+              "mode": "list",
+              "queryType": "table",
+              "table": ""
+            }
+          },
+          "pluginVersion": "4.8.2",
+          "queryType": "table",
+          "rawSql": "SELECT concat(\n    LogAttributes ['source.address'],\n    ':',\n    LogAttributes ['source.port'],\n    ' -\u003e ',\n    LogAttributes ['destination.address'],\n    ':',\n    LogAttributes ['destination.port']\n  ) AS flow,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime)) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$flow_sampler_address' = 'ALL'\n    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'\n  )\n  AND (\n    '$flow_type' = 'ALL'\n    OR LogAttributes ['flow.type'] = '$flow_type'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY flow\nORDER BY bytes_per_second DESC\nLIMIT 5;",
+          "refId": "A"
+        }
+      ],
+      "title": "Top Dst with Src (Avg.)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -190,10 +409,10 @@
         ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 8
+        "y": 17
       },
       "id": 2,
       "options": {
@@ -209,6 +428,10 @@
       "pluginVersion": "11.5.1",
       "targets": [
         {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "editorType": "sql",
           "format": 1,
           "meta": {
@@ -223,17 +446,17 @@
           },
           "pluginVersion": "4.8.2",
           "queryType": "table",
-          "rawSql": "SELECT concat(\n    LogAttributes ['destination.address'],\n    ':',\n    LogAttributes ['destination.port']\n  ) AS destination,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime) / 1000) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY destination\nORDER BY bytes_per_second DESC\nLIMIT 5;",
+          "rawSql": "SELECT concat(\n    LogAttributes ['destination.address'],\n    ':',\n    LogAttributes ['destination.port']\n  ) AS destination,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime)) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$flow_sampler_address' = 'ALL'\n    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'\n  )\n  AND (\n    '$flow_type' = 'ALL'\n    OR LogAttributes ['flow.type'] = '$flow_type'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY destination\nORDER BY bytes_per_second DESC\nLIMIT 5;",
           "refId": "A"
         }
       ],
-      "title": "Top Destination",
+      "title": "Top Destination (Avg.)",
       "type": "table"
     },
     {
       "datasource": {
         "type": "grafana-clickhouse-datasource",
-        "uid": "clickhouse"
+        "uid": "${datasource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -290,10 +513,10 @@
         ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 15
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
       },
       "id": 3,
       "options": {
@@ -309,6 +532,10 @@
       "pluginVersion": "11.5.1",
       "targets": [
         {
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "${datasource}"
+          },
           "editorType": "sql",
           "format": 1,
           "meta": {
@@ -323,11 +550,11 @@
           },
           "pluginVersion": "4.8.2",
           "queryType": "table",
-          "rawSql": "SELECT concat(\n    LogAttributes ['source.address'],\n    ':',\n    LogAttributes ['source.port']\n  ) AS source,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime) / 1000) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY source\nORDER BY bytes_per_second DESC\nLIMIT 5;",
+          "rawSql": "SELECT concat(\n    LogAttributes ['source.address'],\n    ':',\n    LogAttributes ['source.port']\n  ) AS source,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) AS total_bytes,\n  sum(toUInt64(LogAttributes ['flow.io.packets'])) AS total_packets,\n  sum(toUInt64(LogAttributes ['flow.io.bytes'])) / (($__toTime - $__fromTime)) AS bytes_per_second\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\n  AND (\n    '$flow_sampler_address' = 'ALL'\n    OR LogAttributes ['flow.sampler_address'] = '$flow_sampler_address'\n  )\n  AND (\n    '$flow_type' = 'ALL'\n    OR LogAttributes ['flow.type'] = '$flow_type'\n  )\n  AND (\n    '$transport_type' = 'ALL'\n    OR LogAttributes ['network.transport'] = '$transport_type'\n  )\nGROUP BY source\nORDER BY bytes_per_second DESC\nLIMIT 5;",
           "refId": "A"
         }
       ],
-      "title": "Top Source",
+      "title": "Top Source (Avg.)",
       "type": "table"
     }
   ],
@@ -338,10 +565,27 @@
   "templating": {
     "list": [
       {
+        "current": {
+          "text": "ClickHouse",
+          "value": "clickhouse"
+        },
+        "label": "Data Source",
+        "name": "datasource",
+        "options": [],
+        "query": "grafana-clickhouse-datasource",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
         "allValue": "ALL",
         "current": {
-          "text": "zjusct-cluster",
-          "value": "zjusct-cluster"
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
         },
         "definition": "SELECT ResourceAttributes ['cloud.region'] AS cloud_region\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND (NOT empty(cloud_region))\nGROUP BY cloud_region;",
         "includeAll": true,
@@ -359,6 +603,10 @@
           "text": "All",
           "value": "$__all"
         },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
+        },
         "definition": "SELECT LogAttributes ['flow.sampler_address'] AS flow_sampler_address\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY flow_sampler_address;",
         "description": "",
         "includeAll": true,
@@ -373,8 +621,12 @@
       {
         "allValue": "ALL",
         "current": {
-          "text": "netflow_v9",
-          "value": "netflow_v9"
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
         },
         "definition": "SELECT LogAttributes ['flow.type'] AS flow_type\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY flow_type;",
         "includeAll": true,
@@ -392,6 +644,10 @@
           "text": "All",
           "value": "$__all"
         },
+        "datasource": {
+          "type": "grafana-clickhouse-datasource",
+          "uid": "${datasource}"
+        },
         "definition": "SELECT LogAttributes ['network.transport'] AS transport_type\nFROM otel_logs\nWHERE (\n    Timestamp \u003e= $__fromTime\n    AND Timestamp \u003c= $__toTime\n\n  )\n  AND ScopeName = 'otelcol/netflowreceiver'\n  AND (\n    '$cloud_region' = 'ALL'\n    OR ResourceAttributes ['cloud.region'] = '$cloud_region'\n  )\nGROUP BY transport_type;",
         "includeAll": true,
         "label": "Transport Type",
@@ -405,13 +661,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "OpenTelemetry NetFlow Receiver",
   "uid": "cegvjfputxf5sf",
-  "version": 19,
+  "version": 44,
   "weekStart": ""
 }

@@ -696,13 +696,13 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "OpenTelemetry Collector Syslog Receiver",
   "uid": "begv2dk886w3kb",
-  "version": 5,
+  "version": 7,
   "weekStart": ""
 }
