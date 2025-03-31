@@ -1,65 +1,73 @@
 # clusters.zju.edu.cn
 
-[可观测性 - ZJUSCT OpenDocs](https://zjusct.pages.zjusct.io/ops/opendocs/operation/observability/)
+[中文 README](README_cn.md) | [English README](README.md)
 
-本仓库是 ZJUSCT 可观测性系统的配置文件。
+[Observability - ZJUSCT OpenDocs](https://zjusct.pages.zjusct.io/ops/opendocs/operation/observability/)
+
+This repository contains configuration files for the ZJUSCT observability system.
+
+## Demo
+
+| pdu          | container      | netflow        | trace          |
+| ------------ | -------------- | -------------- | -------------- |
+| ![pdu.jpeg](demo/pdu.jpeg) | ![container.jpeg](demo/container.jpeg) | ![netflow.jpeg](demo/netflow.jpeg) | ![trace.jpeg](demo/trace.jpeg) |
+
+| cluster      | hostmetrics    | syslog         |                |
+| ------------ | -------------- | -------------- | -------------- |
+| ![cluster.jpeg](demo/cluster.jpeg) | ![hostmetrics.jpeg](demo/hostmetrics.jpeg) | ![syslog.jpeg](demo/syslog.jpeg) |                |
 
 ## Todo List
 
 - To be done
-    - [ ] InfluxDB Exporter
     - [ ] Grafana Provision Alerts
 - Pending
-    - [ ] 修复 Prometheus Exporter 描述不一致报错：Wait for [Inconsistent Metric Descriptions Between `dockerstatsreceiver` and `podmanstatsreceiver` Causing `prometheusexporter` Errors · Issue #35829 · open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/35829)
-    - [ ] Netflow 分析：Wait for [New component: netflow receiver · Issue #32732 · open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/32732)
-        - [IPFIX Lookup Processor](https://github.com/fizzers123/opentelemetry-collector-contrib/tree/ipfix-processor-implementation/processor/ipfixlookupprocessor)
-    - [ ] Wait for Prometheus 3.0, [native support for OpenTelemetry](https://prometheus.io/blog/2024/03/14/commitment-to-opentelemetry/) is coming.
-    - [ ] Journald 属性处理：Wait for [journald - Consider parsing more known fields from logs · Issue #7298 · open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/7298).
+    - [ ] InfluxDB Exporter
+    - [ ] Journald attribute processing: Wait for [journald - Consider parsing more known fields from logs · Issue #7298 · open-telemetry/opentelemetry-collector-contrib](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/7298).
 
-## 技术选型
+## Technology Stack
 
 We ❤️ Open Source
 
-| 层次 | 组件 |
+| Layer | Components |
 | --- | --- |
-| 数据采集 | [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector) |
-| 数据存储 | [ClickHouse](https://github.com/ClickHouse/ClickHouse)、[InfluxDB](https://github.com/influxdata/influxdb)、[Prometheus](https://github.com/prometheus/prometheus) |
-| 数据分析、可视化和告警 | [Grafana](https://github.com/grafana/grafana) |
+| Data Collection | [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector) |
+| Data Storage | [ClickHouse](https://github.com/ClickHouse/ClickHouse), [InfluxDB](https://github.com/influxdata/influxdb), [Prometheus](https://github.com/prometheus/prometheus) |
+| Data Analysis, Visualization and Alerting | [Grafana](https://github.com/grafana/grafana) |
 
-系统整体设计遵循 KISS（Keep It Simple, Stupid）原则，简化层次间交互的复杂度，降低系统维护的难度。
+The overall system design follows the KISS (Keep It Simple, Stupid) principle, simplifying the complexity of interactions between layers and reducing the difficulty of system maintenance.
 
-## 数据状态
+## Data State
 
-为了方便运维管理，系统的状态应由仓库中的配置文件完全决定，Docker 是无状态的。需要持久化的数据使用 Docker Volume 存储在本地。
+For ease of operations management, the system state should be completely determined by configuration files in the repository, with Docker being stateless. Data that needs to be persisted is stored locally using Docker Volumes.
 
-- 配置文件：能够使用 Git 管理的配置文件，通常是简单的文本，存储在本仓库中。依靠这些配置文件，我们只需要克隆仓库并 `docker compose up` 就能够快速部署整个系统，开箱即用。
+- **Configuration files**: Simple text files that can be managed using Git, stored in this repository. With these configuration files, we only need to clone the repository and run `docker compose up` to quickly deploy the entire system, ready to use out of the box.
 
-    部分服务将配置保存到数据库中，比如 Grafana，它使用内置的 SQLite 3 存储配置、用户、仪表盘等数据。即使如此，它也提供了 [Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/) 功能，可以通过配置文件初始化各项配置。InfluxDB 更加极端，其自动生成 token 的机制导致配置文件无法完全决定状态。
+    Some services store configurations in databases, such as Grafana, which uses built-in SQLite 3 to store configurations, users, dashboards, and other data. Nevertheless, it provides [Provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/) functionality to initialize various configurations via configuration files. InfluxDB is more extreme, as its automatic token generation mechanism prevents configuration files from completely determining its state.
 
-- 数据库：服务的数据库需要持久化存储，Docker 官方建议使用 Volume 来存储数据库这类写入密集型的数据。
+- **Database**: Service databases need persistent storage. Docker officially recommends using Volumes to store write-intensive data like databases.
 
     > Use volumes for write-heavy workloads: Volumes provide the best and most predictable performance for write-heavy workloads. This is because they bypass the storage driver and do not incur any of the potential overheads introduced by thin provisioning and copy-on-write. Volumes have other benefits, such as allowing you to share data among containers and persisting even when no running container is using them.
 
-    为了做到开箱即用，`compose.yml` 中的 Volume 均使用相对路径，Git 仓库保留 `database` 的空文件夹结构。
+    To achieve out-of-the-box functionality, the Volumes in `compose.yml` all use relative paths, and the Git repository maintains the empty folder structure of `database`.
 
-## 安全
+## Security
 
-区分四种访问范围：
+Four access scopes are distinguished:
 
-| 区域 | 信任度 | 暴露的服务 |
+| Area | Trust Level | Exposed Services |
 | --- | --- | --- |
-| Docker 内部、宿主机 | 受 Docker Engine 管理的通信，完全信任 | 所有 |
-| 集群内部 | 安全状态良好，无需 TLS 加密 | 部分无认证和弱认证的服务，如 syslog、snmp |
-| 校内网络 | 需要 TLS 加密，需要认证 | 仅 otel-collector 和 Grafana |
-| 公网 | 阻断 | 无 |
+| Docker internal, host machine | Communication managed by Docker Engine, fully trusted | All |
+| Cluster internal | Good security status, no TLS encryption required | Services with no authentication or weak authentication, such as syslog, snmp |
+| Campus network | TLS encryption required, authentication required | Only otel-collector and Grafana |
+| Public network | Blocked | None |
 
-认证 Token 托管在集群 VaultWarden 中。在 `compose.yml` 中设置为环境变量，通过 `get_credential.sh` 脚本生成 `.env` 文件，由 Docker Compose 读取。`.env` 文件不应当提交到 Git 仓库中。
+Authentication tokens are hosted in the cluster's VaultWarden. They are set as environment variables in `compose.yml`, with the `.env` file generated using the `get_credential.sh` script and read by Docker Compose. The `.env` file should not be committed to the Git repository.
 
-## 细节
+## Details
 
 ### OpenTelemetry
 
-Collector 部署为 **Agent + Gateway 模式**。在这种模式下，agent 尽可能只负责采集数据，更多的转换和处理逻辑交给 gateway。**资源属性（Resource Attributes）** 用于标识产生数据的实体，由不同层级的 Collector 附加。通过资源属性划分数据来源的层级结构，有利于在 Grafana 中对数据进行分析。
+Collector is deployed in the **Agent + Gateway mode**. In this mode, agents are responsible for data collection as much as possible, with more transformation and processing logic handled by the gateway. **Resource Attributes** are used to identify entities that generate data, and are attached by Collectors at different levels. Dividing data sources into hierarchical structures through resource attributes facilitates data analysis in Grafana.
 
 ```mermaid
 flowchart TD
@@ -86,50 +94,50 @@ flowchart TD
  n8["Infrastructure"] --> n1
 ```
 
-下面是基于 Semantic Conventions 1.28.0 的在 ZJUSCT 可观测性系统中的资源属性及其来源：
+Below are resource attributes and their sources in the ZJUSCT observability system, based on Semantic Conventions 1.28.0:
 
-- 节点 agent
+- Node agent
 
-    - 节点自身的资源属性
+    - Node's own resource attributes
 
-        | 资源属性 | 来源 | 备注 |
+        | Resource Attribute | Source | Notes |
         | --- | --- | --- |
-        | [节点 `host.name`](https://opentelemetry.io/docs/specs/semconv/resource/host/) 和 [系统 `os.*`](https://opentelemetry.io/docs/specs/semconv/resource/os/) | `resourcedetector` | 在流水线中**自动添加** |
+        | [Node `host.name`](https://opentelemetry.io/docs/specs/semconv/resource/host/) and [System `os.*`](https://opentelemetry.io/docs/specs/semconv/resource/os/) | `resourcedetector` | **Automatically added** in the pipeline |
 
-    - 节点上运行的服务大致可以分为两类：进程和容器。
+    - Services running on nodes can be roughly divided into two categories: processes and containers.
 
-    | 资源属性 | 来源 | 备注 |
+    | Resource Attribute | Source | Notes |
     | --- | --- | --- |
-    | [进程和运行时 `process.*`](https://opentelemetry.io/docs/specs/semconv/resource/process/) | 不强制要求 | - |
-    | [服务 `service.name`](https://opentelemetry.io/docs/specs/semconv/resource/#service) | `journaldreceiver` | **使用 Operator 提取** `SYSLOG_IDENTIFIER` 字段 |
-    | | `filelogreceiver` | **使用 Operator 添加**。一般情况下手动添加（文件内很少再包含服务名） |
-    | [容器 `container.name`](https://opentelemetry.io/docs/specs/semconv/resource/container/) | `dockerstatsreceiver` | **自动添加** |
-    | | `filelogreceiver` | **使用 Operator 提取** Docker JSON 日志中的字段，需要修改 Docker `deamon.json` |
+    | [Process and runtime `process.*`](https://opentelemetry.io/docs/specs/semconv/resource/process/) | Not mandatory | - |
+    | [Service `service.name`](https://opentelemetry.io/docs/specs/semconv/resource/#service) | `journaldreceiver` | **Using Operator to extract** the `SYSLOG_IDENTIFIER` field |
+    | | `filelogreceiver` | **Using Operator to add**. Generally manually added (files rarely contain service names) |
+    | [Container `container.name`](https://opentelemetry.io/docs/specs/semconv/resource/container/) | `dockerstatsreceiver` | **Automatically added** |
+    | | `filelogreceiver` | **Using Operator to extract** fields from Docker JSON logs, requires modification of Docker `daemon.json` |
 
-- 集群 gateway
+- Cluster gateway
 
-    | 资源属性 | 来源 | 备注 |
+    | Resource Attribute | Source | Notes |
     | --- | --- | --- |
-    | [集群 `cloud.region`](https://opentelemetry.io/docs/specs/semconv/resource/cloud/) | 在流水线中**手动添加** | 目前 OTel 并未规定真正意义上的“集群”资源属性，因此暂借云服务信息 `cloud.*` 代替。<br />在简单跨集群部署的情况下可能没有单独的集群 gateway，此时需要 agent 中添加 `cloud.region`。 |
-    | [设备 `device.*`](https://opentelemetry.io/docs/specs/semconv/resource/device/) | - | 我们主要使用设备属性表示基础设施（路由器、交换机、智能 PDU 等），和节点有所区分。<br />- `device.id`<br />- `device.type` |
-    | | `syslogreceiver` | **使用 Operator 提取** `hostname` 字段。 |
+    | [Cluster `cloud.region`](https://opentelemetry.io/docs/specs/semconv/resource/cloud/) | **Manually added** in the pipeline | Currently, OTel does not define a true "cluster" resource attribute, so we temporarily use cloud service information `cloud.*` instead.<br />In simple cross-cluster deployments without a dedicated cluster gateway, `cloud.region` needs to be added to the agent. |
+    | [Device `device.*`](https://opentelemetry.io/docs/specs/semconv/resource/device/) | - | We primarily use device attributes to represent infrastructure (routers, switches, smart PDUs, etc.), distinct from nodes.<br />- `device.id`<br />- `device.type` |
+    | | `syslogreceiver` | **Using Operator to extract** the `hostname` field. |
 
-除了上述资源属性和基本的 JSON 等格式解析，agent 尽可能不进行其他处理。这样既方便部署（更改主要发生在 gateway），也能够保持 agent 的轻量化，减少边缘侧资源消耗。
+Apart from the above resource attributes and basic format parsing like JSON, agents should avoid performing other processing as much as possible. This facilitates deployment (main changes occur in the gateway) and keeps agents lightweight, reducing resource consumption at the edge.
 
 ### Grafana
 
-我们基于上述的数据源、资源属性和 OpenTelemetry 语义规范，制作了一系列的 Grafana 仪表盘，存放于 [`config/grafana/provisioning/dashboards`](config/grafana/provisioning/dashboards) 目录下：
+Based on the data sources, resource attributes, and OpenTelemetry semantic specifications mentioned above, we have created a series of Grafana dashboards, stored in the [`config/grafana/provisioning/dashboards`](config/grafana/provisioning/dashboards) directory:
 
-- `zjusct/single`：为单个种类的数据（比如某个 Receiver 和某个存储后端的搭配）制作的 panel 集合，方便 dashboard 取用组合。
-- `zjusct/combined`：多种数据源组合的仪表盘，有更加具体的应用场景。
+- `zjusct/single`: Panel collections designed for a single type of data (such as a specific Receiver and storage backend combination), which can be easily incorporated into dashboards.
+- `zjusct/combined`: Dashboards combining multiple data sources, for more specific application scenarios.
 
-因为 Grafana 数据无持久化，移除 Grafana Docker 时应当注意备份仪表盘。我们使用 [esnet/gdg: Grafana Dashboard Manager](https://github.com/esnet/gdg) 进行仪表盘批量备份。
+Since Grafana data is not persistent, dashboard backups should be considered when removing the Grafana Docker container. We use [esnet/gdg: Grafana Dashboard Manager](https://github.com/esnet/gdg) for batch dashboard backups.
 
-有很多站点也提供了公开的仪表盘，我们参考了其中的一些设计：
+Many sites offer public dashboards, and we've referenced some of their designs:
 
 - [Sentry Software](https://hws-demo.sentrysoftware.com/dashboards)
 
-## 代码风格
+## Code Style
 
-- 使用 EditorConfig 插件。你可以参考 [.editorconfig](.editorconfig) 文件。
-- SQL 使用 VSCode SQLTools 插件格式化。
+- Use the EditorConfig plugin. You can refer to the [.editorconfig](.editorconfig) file.
+- Format SQL using the VSCode SQLTools plugin.
