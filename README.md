@@ -12,9 +12,9 @@ This repository contains configuration files for the ZJUSCT observability system
 | ------------ | -------------- | -------------- | -------------- |
 | ![pdu.jpeg](demo/pdu.jpeg) | ![container.jpeg](demo/container.jpeg) | ![netflow.jpeg](demo/netflow.jpeg) | ![trace.jpeg](demo/trace.jpeg) |
 
-| cluster      | hostmetrics    | syslog         |                |
+| cluster      | hostmetrics    | syslog         | mirror |
 | ------------ | -------------- | -------------- | -------------- |
-| ![cluster.jpeg](demo/cluster.jpeg) | ![hostmetrics.jpeg](demo/hostmetrics.jpeg) | ![syslog.jpeg](demo/syslog.jpeg) |                |
+| ![cluster.jpeg](demo/cluster.jpeg) | ![hostmetrics.jpeg](demo/hostmetrics.jpeg) | ![syslog.jpeg](demo/syslog.jpeg) | ![mirror.jpeg](demo/mirror.jpeg) |
 
 ## Todo List
 
