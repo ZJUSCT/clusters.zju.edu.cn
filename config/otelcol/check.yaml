@@ -8,29 +8,7 @@
 # - httpcheck
 
 receivers:
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/tcpcheckreceiver
-  # tcpcheck/vlan2:
-  #   targets:
-  #     - endpoint: 172.25.2.23:22
-  #     - endpoint: 172.25.2.24:22
-  #     - endpoint: 172.25.2.100:22
-  #     - endpoint: 172.25.2.101:22
-  #     - endpoint: 172.25.2.120:22
-  #     - endpoint: 172.25.2.121:22
-  #     - endpoint: 172.25.2.130:22
-  #     - endpoint: 172.25.2.131:22
-  #     - endpoint: 172.25.2.132:22
-  #     - endpoint: 172.25.2.133:22
-  #     - endpoint: 172.25.2.134:22
-  #     - endpoint: 172.25.2.135:22
-  #     - endpoint: 172.25.2.136:22
-  # tcpcheck/vlan3:
-  #   targets:
-  #     - endpoint: 172.25.3.253:22
-  #     - endpoint: 172.25.3.254:22
-  # tcpcheck/vlan4:
-  #   targets:
-  #     - endpoint: 172.25.4.40:22
+
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/tlscheckreceiver
   tlscheck:
     targets:
@@ -49,7 +27,21 @@ receivers:
       - endpoint: www.qq.com:443
       - endpoint: www.bilibili.com:443
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/httpcheckreceiver
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/tcpcheckreceiver
   # https://github.com/open-telemetry/opentelemetry-collector/blob/main/config/configtls/README.md
+  tcpcheck/cluster:
+    targets:
+      - endpoint: 172.25.4.9:22
+      - endpoint: 172.25.4.10:22
+      - endpoint: 172.25.4.40:22
+      - endpoint: 172.25.4.60:22
+      - endpoint: 172.25.4.61:22
+      - endpoint: 172.25.4.62:22
+      - endpoint: 172.25.4.63:22
+      - endpoint: 172.25.4.64:22
+      - endpoint: 172.25.4.70:22
+      - endpoint: 172.25.4.71:22
+      - endpoint: 172.25.4.80:22
   httpcheck/cluster:
     targets:
       - method: GET
@@ -84,6 +76,9 @@ receivers:
           - https://mirror.zju.edu.cn/
           - https://www.zju.edu.cn/
           - https://www.clusters.zjusct.io/
+  tcpcheck/zju:
+    targets:
+      - endpoint: git.zju.edu.cn:22
   httpcheck/internet:
     targets:
       - method: GET
@@ -92,6 +87,10 @@ receivers:
           - https://www.qq.com/
           - https://www.zhihu.com/
           - https://www.bilibili.com/
+  tcpcheck/internet:
+    targets:
+      - endpoint: levante.dkrz.de:22
+      - endpoint: bridges2.psc.edu:22
 
 processors:
   # https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor
