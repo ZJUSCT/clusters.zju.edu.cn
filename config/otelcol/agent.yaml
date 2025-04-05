@@ -394,3 +394,8 @@ service:
       receivers: [otlp, docker_stats, hostmetrics/fast, hostmetrics/slow]
       processors: [memory_limiter, batch, resourcedetection, resource/cloud]
       exporters: [otlphttp/with_auth]
+  # https://opentelemetry.io/docs/collector/internal-telemetry/#activate-internal-telemetry-in-the-collector
+  # internal is enabled by default, close it
+  telemetry:
+    metrics:
+      level: none

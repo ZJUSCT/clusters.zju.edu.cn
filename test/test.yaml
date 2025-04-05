@@ -3,24 +3,7 @@
 
 # configuration for local test
 receivers:
-  # tcpcheck:
-  #   targets:
-  #     - endpoint: 172.25.2.23:22
-    # collection_interval: 60s
-      # - 172.25.2.23:22
-      # - 172.25.2.24:22
-      # - 172.25.2.100:22
-      # - 172.25.2.101:22
-      # - 172.25.2.120:22
-      # - 172.25.2.121:22
-      # - 172.25.2.130:22
-      # - 172.25.2.131:22
-      # - 172.25.2.132:22
-      # - 172.25.2.133:22
-      # - 172.25.2.134:22
-      # - 172.25.2.135:22
-      # - 172.25.2.136:22
-      # - 172.25.3.23:443
+
 
 exporters:
   # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlphttpexporter/README.md
@@ -70,4 +53,4 @@ service:
   # 8888 is enabled by default, so change a port to avoid conflict with native collector
   telemetry:
     metrics:
-      address: 0.0.0.0:8889
+      level: none
