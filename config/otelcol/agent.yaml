@@ -250,7 +250,7 @@ receivers:
       memory:
       network:
         include:
-          interfaces: ["^eth*", "^en*", "^ib*"]
+          interfaces: ["^eth*", "^en*", "^ib*", "^bond*"]
           match_type: "regexp"
       paging:
       processes:
