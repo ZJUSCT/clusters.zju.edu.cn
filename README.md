@@ -1,8 +1,8 @@
-# clusters.zju.edu.cn
+# grafana.clusters.zjusct.io
 
 [中文 README](README_cn.md) | [English README](README.md)
 
-[Observability - ZJUSCT OpenDocs](https://zjusct.pages.zjusct.io/ops/opendocs/operation/observability/)
+[Observability - ZJUSCT OpenDocs](https://docs.zjusct.io/operation/observability/)
 
 This repository contains configuration files for the ZJUSCT observability system.
 

@@ -1,8 +1,8 @@
-# clusters.zju.edu.cn
+# grafana.clusters.zjusct.io
 
 [中文 README](README_cn.md) | [English README](README.md)
 
-[可观测性 - ZJUSCT OpenDocs](https://zjusct.pages.zjusct.io/ops/opendocs/operation/observability/)
+[可观测性 - ZJUSCT OpenDocs](https://docs.zjusct.io/operation/observability/)
 
 本仓库是 ZJUSCT 可观测性系统的配置文件。
 
